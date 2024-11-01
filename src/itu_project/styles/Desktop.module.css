@@ -1,0 +1,203 @@
+.order1Child {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0%;
+    right: 0%;
+    bottom: 0%;
+    left: 0%;
+    border-radius: 50px;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+}
+.printedItem {
+    position: absolute;
+    height: 9.22%;
+    width: 40.6%;
+    top: 15.96%;
+    left: 10.08%;
+    display: inline-block;
+}
+.johnJohnssss {
+    position: absolute;
+    height: 8.87%;
+    width: 60.49%;
+    top: 52.84%;
+    left: 10.08%;
+    display: inline-block;
+}
+.johnWatsStreet {
+    position: absolute;
+    height: 9.22%;
+    width: 58.58%;
+    top: 34.4%;
+    left: 10.08%;
+    display: inline-block;
+}
+.hc49bcdsml {
+    position: absolute;
+    height: 9.57%;
+    width: 43.6%;
+    top: 86.88%;
+    left: 45.5%;
+    display: inline-block;
+}
+.shopifyIcon {
+    position: absolute;
+    height: 30.35%;
+    width: 15.8%;
+    top: 69.5%;
+    right: 77.93%;
+    bottom: 0.14%;
+    left: 6.27%;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+    object-fit: cover;
+}
+.order1Item {
+    position: absolute;
+    height: 15.25%;
+    width: 26.98%;
+    top: 9.93%;
+    right: 8.99%;
+    bottom: 74.82%;
+    left: 64.03%;
+    border-radius: 50px;
+    background-color: #fff;
+}
+.status {
+    position: absolute;
+    top: 13.12%;
+    left: 69.21%;
+    color: #000;
+}
+.order1 {
+    position: absolute;
+    top: 101px;
+    left: 566px;
+    width: 367px;
+    height: 282px;
+}
+.dashboardChild {
+    width: 44px;
+    position: relative;
+    border-radius: 50%;
+    height: 45px;
+    object-fit: cover;
+}
+.homeIcon {
+    width: 52.8px;
+    position: relative;
+    height: 45px;
+    object-fit: cover;
+}
+.dashboard {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: rgba(0, 0, 139, 0.81);
+    width: 60px;
+    height: 1024px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px 0px 1px;
+    box-sizing: border-box;
+    gap: 127px;
+}
+.order {
+    position: relative; /* or fixed */
+    top: 10%;   /* 10% of the viewport height */
+    left: 10vw;  /* 10% of the viewport width */
+    width: 19vw; /* 30% of the viewport width */
+    height: 17vw; /* Adjust height automatically */
+    cursor: pointer;
+}
+
+.notActiveWrapper {
+    border-radius: 0px 50px 50px 0px;
+    background-color: #b87333;
+    width: 15%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+.allWrapper {
+    border-radius: 50px 0px 0px 50px;
+    background-color: #b87333;
+    width: 15%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+} 
+.activeWrapper {
+    background-color: #b87333;
+    border-right: 1px solid #fff;
+    border-left: 1px solid #fff;
+    width: 15%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  position: absolute;
+  top: 1%;
+  width: 60%;
+  left: 20%;
+}
+
+.addChild {
+    width: 77px;
+    position: absolute;
+    margin: 0 !important;
+    top: 0px;
+    left: 0px;
+    border-radius: 50%;
+    background-color: #b87333;
+    height: 74px;
+    z-index: 0;
+}
+.plusIcon {
+    width: 65px;
+    position: relative;
+    height: 66px;
+    object-fit: cover;
+    z-index: 1;
+}
+.add {
+    position: absolute;
+    top: 7px;
+    left: 93%;
+    width: 77px;
+    height: 74px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 4px 6px;
+    box-sizing: border-box;
+    gap: 10px;
+    cursor: pointer;
+}
+.desktop1 {
+    width: 100%;
+    position: relative;
+    background-color: #fff;
+    height: 1024px;
+    overflow: hidden;
+    text-align: left;
+    font-size: 20px;
+    color: #e0ffff;
+    font-family: Inter;
+}
+

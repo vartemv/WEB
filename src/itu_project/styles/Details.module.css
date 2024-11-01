@@ -1,0 +1,78 @@
+.bhjbhj4cjccs94c {
+    position: absolute;
+    top: 10px;
+    left: 198px;
+    display: inline-block;
+    width: 417px;
+}
+.something {
+    position: absolute;
+    top: 79px;
+    left: 38px;
+}
+.somewhereSt1 {
+    margin: 0;
+}
+.somewhereSt {
+    position: absolute;
+    top: 168px;
+    left: 38px;
+}
+.imageIcon {
+    position: absolute;
+    top: 261px;
+    left: 420px;
+    border-radius: 50px;
+    width: 356px;
+    height: 173px;
+    object-fit: cover;
+}
+.upsIcon {
+    position: absolute;
+    top: 158px;
+    left: 684px;
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+}
+.div {
+    position: absolute;
+    top: 378px;
+    left: 38px;
+    color: #fff;
+    display: inline-block;
+    width: 144px;
+    height: 44px;
+}
+.amazonIcon {
+    position: absolute;
+    top: 14px;
+    left: 729px;
+    width: 54px;
+    height: 65px;
+    object-fit: cover;
+}
+.div1 {
+    position: absolute;
+    top: 269px;
+    left: 38px;
+    color: #fff;
+    display: inline-block;
+    width: 144px;
+    height: 58px;
+}
+.details {
+    width: 813px;
+    position: relative;
+    border-radius: 50px;
+    background-color: rgba(0, 0, 139, 0.81);
+    height: 452px;
+    overflow: hidden;
+    max-width: 100%;
+    max-height: 100%;
+    text-align: left;
+    font-size: 36px;
+    color: #e0ffff;
+    font-family: Inter;
+}
+
