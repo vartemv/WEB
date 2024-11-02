@@ -1,8 +1,11 @@
 import { FunctionComponent, useState } from 'react';
 import styles from '../styles/CreateOrder.module.css';
+import {Order} from 'types';
+import { PassThrough } from 'stream';
 
 export type CreateOrderType = {
   	className?: string;
+	onAddOrder: (newOrder: Order) => void;
 }
 
 interface FormData {
@@ -12,7 +15,7 @@ interface FormData {
 	item_id: string;
   }
 
-const CreateOrder:FunctionComponent<CreateOrderType> = ({ className="" }) => {
+const CreateOrder:FunctionComponent<CreateOrderType> = ({ className="", onAddOrder }) => {
 	const [orderData, setOrderData] = useState<FormData>({
 		item: '',
 		name: '',
@@ -30,7 +33,22 @@ const CreateOrder:FunctionComponent<CreateOrderType> = ({ className="" }) => {
 			body: JSON.stringify(orderData)
 		})
 			.then((res) => res.json())
-			.then(({ data }) => console.log(data));
+			.then(({ data }) => {
+				console.log(data);
+
+				let id_number:number = parseInt(orderData.item_id, 10);
+
+				onAddOrder(
+					{
+						id: id_number,
+						name: orderData.item,
+						address: orderData.address,
+						status: orderData.name
+					}
+				)
+
+				setOrderData({ item: '', name: '', address: '', item_id: '' });
+			});
 	};
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -66,19 +66,13 @@
     left: 64.03%;
     border-radius: 50px;
     background-color: #fff;
+    transform: scale(1);
 }
 .status {
     position: absolute;
     top: 13.12%;
     left: 69.21%;
     color: #000;
-}
-.order1 {
-    position: absolute;
-    top: 101px;
-    left: 566px;
-    width: 367px;
-    height: 282px;
 }
 .dashboardChild {
     width: 44px;
@@ -109,9 +103,8 @@
     gap: 127px;
 }
 .order {
-    position: relative; /* or fixed */
-    top: 10%;   /* 10% of the viewport height */
-    left: 10vw;  /* 10% of the viewport width */
+    position: relative; /* or fixed */   /* 10% of the viewport height */
+     /* 10% of the viewport width */
     width: 19vw; /* 30% of the viewport width */
     height: 17vw; /* Adjust height automatically */
     cursor: pointer;
@@ -199,5 +192,20 @@
     font-size: 20px;
     color: #e0ffff;
     font-family: Inter;
+}
+
+.OrdersGrid
+{
+    display: flex;
+       /* 10% of the viewport height */
+      /* 10% of the viewport width */
+     /* 30% of the viewport width */
+    height: 90vh; /* Adjust height automatically */
+    margin-top: 3.8%;
+    margin-left: 7%;
+    /* border: 10px solid #000; */
+    flex-wrap: wrap;
+    column-gap: 1.5em;
+    row-gap: 1.5;
 }
 

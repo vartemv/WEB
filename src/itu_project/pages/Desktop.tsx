@@ -3,9 +3,12 @@ import Details from "../components/Details";
 import PortalPopup from "../components/PortalPopup";
 import CreateOrder from "../components/CreateOrder";
 import styles from '../styles/Desktop.module.css';
-
+import {Order} from 'types';
 
 const Desktop: FunctionComponent = () => {
+    const [orders, setOrders] = useState<Order[]>([
+        { id: 5315315, name: 'John Johnssss', address: 'John Wats street', status: 'Printed item' }
+    ]);
     const [isDetailsOpen, setDetailsOpen] = useState(false);
     const [isCreateOrderOpen, setCreateOrderOpen] = useState(false);
 
@@ -26,6 +29,10 @@ const Desktop: FunctionComponent = () => {
         setCreateOrderOpen(false);
     }, []);
 
+    const addOrder = (newOrder: Order) => {
+        setOrders((prevOrders) => [...prevOrders, newOrder]);
+    };
+
     return (<>
         <div className={styles.desktop1}>
             <div className={styles.dashboard}>
@@ -36,15 +43,19 @@ const Desktop: FunctionComponent = () => {
                 <img className={styles.homeIcon} alt="" src="Graph.png" />
                 <img className={styles.homeIcon} alt="" src="Gears.png" />
             </div>
-            <div className={styles.order} onClick={openDetails}>
-                <img className={styles.order1Child} alt="" src="rectangle_order.png" />
-                <div className={styles.printedItem}>Printed item</div>
-                <div className={styles.johnJohnssss}>John Johnssss</div>
-                <div className={styles.johnWatsStreet}>John Wats street</div>
-                <div className={styles.hc49bcdsml}>743hc49bcdsml</div>
-                <img className={styles.shopifyIcon} alt="" src="Shopify.png" />
-                <div className={styles.order1Item} />
-                <div className={styles.status}>Status</div>
+            <div className={styles.OrdersGrid}>
+            {orders.map((order) => (
+                <div key={order.id} className={styles.order} onClick={openDetails}>
+                    <img className={styles.order1Child} alt="" src="rectangle_order.png" />
+                    <div className={styles.printedItem}>{order.status}</div>
+                    <div className={styles.johnJohnssss}>{order.name}</div>
+                    <div className={styles.johnWatsStreet}>{order.address}</div>
+                    <div className={styles.hc49bcdsml}>{order.id}</div>
+                    <img className={styles.shopifyIcon} alt="" src="Shopify.png" />
+                    <div className={styles.order1Item} />
+                    <div className={styles.status}>Status</div>
+                </div>
+            ))}
             </div>
             <div className={styles.filters}>
                 <div className={styles.allWrapper}>
@@ -76,7 +87,7 @@ const Desktop: FunctionComponent = () => {
                 placement="Centered"
                 onOutsideClick={closeCreateOrder}
             >
-                <CreateOrder/>
+                <CreateOrder onAddOrder= {addOrder}/>
             </PortalPopup>
         )}</>);
 };
