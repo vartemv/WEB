@@ -1,26 +1,21 @@
 import { FunctionComponent, useState } from 'react';
 import styles from '../styles/CreateOrder.module.css';
 import {Order} from 'types';
-import { PassThrough } from 'stream';
 
 export type CreateOrderType = {
   	className?: string;
 	onAddOrder: (newOrder: Order) => void;
 }
 
-interface FormData {
-	item: string;
-	name: string;
-	address: string;
-	item_id: string;
-  }
-
 const CreateOrder:FunctionComponent<CreateOrderType> = ({ className="", onAddOrder }) => {
-	const [orderData, setOrderData] = useState<FormData>({
+	const [orderData, setOrderData] = useState<Order>({
 		item: '',
 		name: '',
 		address: '',
-		item_id: '',
+		id: 1000,
+		price: 1000,
+		order_date: new Date(),
+		status: "Active"
 	})
 
 	const add = () => {
@@ -36,18 +31,9 @@ const CreateOrder:FunctionComponent<CreateOrderType> = ({ className="", onAddOrd
 			.then(({ data }) => {
 				console.log(data);
 
-				let id_number:number = parseInt(orderData.item_id, 10);
+				onAddOrder(orderData);
 
-				onAddOrder(
-					{
-						id: id_number,
-						name: orderData.item,
-						address: orderData.address,
-						status: orderData.name
-					}
-				)
-
-				setOrderData({ item: '', name: '', address: '', item_id: '' });
+				setOrderData({ item: '', name: '', address: '', id: NaN, status: '', order_date: new Date(), price: NaN});
 			});
 	};
 
@@ -63,7 +49,7 @@ const CreateOrder:FunctionComponent<CreateOrderType> = ({ className="", onAddOrd
     		<div className={[styles.createOrder, className].join(' ')}>
       			<div className={styles.createOrder1}>Create order</div>
       			<div className={styles.obFormslabel}>
-        				<div className={styles.label}>What</div>
+        				<div className={styles.label}>item name</div>
         				<input
 							name="item"
                     		className={styles.frame}
@@ -73,7 +59,7 @@ const CreateOrder:FunctionComponent<CreateOrderType> = ({ className="", onAddOrd
                 		/>
       			</div>
       			<div className={styles.obFormslabel1}>
-        				<div className={styles.label}>Where</div>
+        				<div className={styles.label}>address</div>
 						<input
 							name = "address"
                     		className={styles.frame}
@@ -83,17 +69,17 @@ const CreateOrder:FunctionComponent<CreateOrderType> = ({ className="", onAddOrd
                 		/>
       			</div>
       			<div className={styles.obFormslabel2}>
-        				<div className={styles.label}>ID</div>
+        				<div className={styles.label}>item ID</div>
         				<input
-							name = "item_id"
+							name = "id"
                     		className={styles.frame}
-                    		value={orderData.item_id}
+                    		value={orderData.id}
                     		onChange={handleInputChange}
                     		placeholder="Enter item id"
                 		/>
       			</div>
 				  <div className={styles.obFormslabel3}>
-        				<div className={styles.label}>Name</div>
+        				<div className={styles.label}>Client Name</div>
         				<input
 							name = "name"
                     		className={styles.frame}

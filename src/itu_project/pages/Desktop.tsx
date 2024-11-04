@@ -1,18 +1,33 @@
-import { FunctionComponent, useState, useCallback } from 'react';
+import { FunctionComponent, useState, useEffect, useCallback } from 'react';
 import Details from "../components/Details";
 import PortalPopup from "../components/PortalPopup";
 import CreateOrder from "../components/CreateOrder";
 import styles from '../styles/Desktop.module.css';
 import {Order} from 'types';
 
+const get_orders = async () => {
+    const response = await fetch("/api/get_order");
+    const obj = await response.json();
+    return obj.data;
+}
+
 const Desktop: FunctionComponent = () => {
-    const [orders, setOrders] = useState<Order[]>([
-        { id: 5315315, name: 'John Johnssss', address: 'John Wats street', status: 'Printed item' }
-    ]);
+
+    const [orders, setOrders] = useState<Order[]>([]); 
     const [isDetailsOpen, setDetailsOpen] = useState(false);
     const [isCreateOrderOpen, setCreateOrderOpen] = useState(false);
+    const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-    const openDetails = useCallback(() => {
+    useEffect(() => {
+        const loadOrders = async () => {
+            const data = await get_orders();
+            setOrders(data);
+        };
+        loadOrders();
+    }, []);
+
+    const openDetails = useCallback((order: Order) => {
+        setSelectedOrder(order);
         setDetailsOpen(true);
     }, []);
 
@@ -45,15 +60,15 @@ const Desktop: FunctionComponent = () => {
             </div>
             <div className={styles.OrdersGrid}>
             {orders.map((order) => (
-                <div key={order.id} className={styles.order} onClick={openDetails}>
+                <div key={order.id} className={styles.order} onClick={() => openDetails(order)}>
                     <img className={styles.order1Child} alt="" src="rectangle_order.png" />
-                    <div className={styles.printedItem}>{order.status}</div>
+                    <div className={styles.printedItem}>{order.item}</div>
                     <div className={styles.johnJohnssss}>{order.name}</div>
                     <div className={styles.johnWatsStreet}>{order.address}</div>
                     <div className={styles.hc49bcdsml}>{order.id}</div>
                     <img className={styles.shopifyIcon} alt="" src="Shopify.png" />
                     <div className={styles.order1Item} />
-                    <div className={styles.status}>Status</div>
+                    <div className={styles.status}>{order.status}</div>
                 </div>
             ))}
             </div>
@@ -73,20 +88,19 @@ const Desktop: FunctionComponent = () => {
                 <img className={styles.plusIcon} alt="" src="Plus.png" />
             </div>
         </div>
-        {isDetailsOpen && (
+        {isDetailsOpen && selectedOrder &&(
             <PortalPopup
                 overlayColor="rgba(113, 113, 113, 0.3)"
                 placement="Centered"
                 onOutsideClick={closeDetails}>
-                <Details />
+                <Details order={selectedOrder}/>
             </PortalPopup>
         )}
         {isCreateOrderOpen && (
             <PortalPopup
                 overlayColor="rgba(113, 113, 113, 0.3)"
                 placement="Centered"
-                onOutsideClick={closeCreateOrder}
-            >
+                onOutsideClick={closeCreateOrder}>
                 <CreateOrder onAddOrder= {addOrder}/>
             </PortalPopup>
         )}</>);

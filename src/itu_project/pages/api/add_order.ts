@@ -7,20 +7,20 @@ type Data = {
 };
  
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-	let { item, name, address, item_id } = req.body;
- 
-    console.log(req.body);
+	let { item, name, address, price, order_date, status } = req.body;
 
-	if (!name || !item || !address || !item_id) {
+	if (!name || !item || !address || !price || !order_date || !status) {
 		res.status(200).json({ success: false });
+		return;
 	}
- 
+
 	await prisma.order.create({
 		data: {
+			price,
 			item,
 			name,
 			address,
-            item_id
+			status
 		}
 	});
  
