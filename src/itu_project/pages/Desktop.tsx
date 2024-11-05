@@ -18,13 +18,27 @@ const Desktop: FunctionComponent = () => {
     const [isCreateOrderOpen, setCreateOrderOpen] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
+    const refreshOrder = async() => {
+        const data = await get_orders();
+        setOrders(data);
+    }
+
     useEffect(() => {
         const loadOrders = async () => {
-            const data = await get_orders();
-            setOrders(data);
+            refreshOrder();
         };
         loadOrders();
     }, []);
+
+    const handleOrderCreated = async () => {
+        refreshOrder();
+        setCreateOrderOpen(false);
+    };
+
+    const handleOrderDeleted = async () => {
+        refreshOrder();
+        setDetailsOpen(false);
+    };
 
     const openDetails = useCallback((order: Order) => {
         setSelectedOrder(order);
@@ -43,10 +57,6 @@ const Desktop: FunctionComponent = () => {
     const closeCreateOrder = useCallback(() => {
         setCreateOrderOpen(false);
     }, []);
-
-    const addOrder = (newOrder: Order) => {
-        setOrders((prevOrders) => [...prevOrders, newOrder]);
-    };
 
     return (<>
         <div className={styles.desktop1}>
@@ -93,7 +103,7 @@ const Desktop: FunctionComponent = () => {
                 overlayColor="rgba(113, 113, 113, 0.3)"
                 placement="Centered"
                 onOutsideClick={closeDetails}>
-                <Details order={selectedOrder}/>
+                <Details order={selectedOrder} onDelete={handleOrderDeleted}/>
             </PortalPopup>
         )}
         {isCreateOrderOpen && (
@@ -101,7 +111,7 @@ const Desktop: FunctionComponent = () => {
                 overlayColor="rgba(113, 113, 113, 0.3)"
                 placement="Centered"
                 onOutsideClick={closeCreateOrder}>
-                <CreateOrder onAddOrder= {addOrder}/>
+                <CreateOrder onCreation={handleOrderCreated}/>
             </PortalPopup>
         )}</>);
 };

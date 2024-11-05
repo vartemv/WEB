@@ -14,13 +14,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		return;
 	}
 
+	price = parseFloat(price);
+
 	await prisma.order.create({
 		data: {
 			price,
 			item,
 			name,
 			address,
-			status
+			status,
+			order_date
 		}
 	});
  

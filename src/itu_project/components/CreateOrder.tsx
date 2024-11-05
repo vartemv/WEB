@@ -4,18 +4,18 @@ import {Order} from 'types';
 
 export type CreateOrderType = {
   	className?: string;
-	onAddOrder: (newOrder: Order) => void;
+	onCreation?: () => void;
 }
 
-const CreateOrder:FunctionComponent<CreateOrderType> = ({ className="", onAddOrder }) => {
+const CreateOrder:FunctionComponent<CreateOrderType> = ({ className="", onCreation}) => {
 	const [orderData, setOrderData] = useState<Order>({
 		item: '',
 		name: '',
 		address: '',
-		id: 1000,
-		price: 1000,
+		price: 0,
 		order_date: new Date(),
-		status: "Active"
+		status: "Active",
+		id: NaN
 	})
 
 	const add = () => {
@@ -30,10 +30,7 @@ const CreateOrder:FunctionComponent<CreateOrderType> = ({ className="", onAddOrd
 			.then((res) => res.json())
 			.then(({ data }) => {
 				console.log(data);
-
-				onAddOrder(orderData);
-
-				setOrderData({ item: '', name: '', address: '', id: NaN, status: '', order_date: new Date(), price: NaN});
+				if(onCreation) onCreation();
 			});
 	};
 
@@ -69,13 +66,13 @@ const CreateOrder:FunctionComponent<CreateOrderType> = ({ className="", onAddOrd
                 		/>
       			</div>
       			<div className={styles.obFormslabel2}>
-        				<div className={styles.label}>item ID</div>
+        				<div className={styles.label}>item price</div>
         				<input
-							name = "id"
+							name = "price"
                     		className={styles.frame}
-                    		value={orderData.id}
+                    		value={orderData.price}
                     		onChange={handleInputChange}
-                    		placeholder="Enter item id"
+                    		placeholder="0"
                 		/>
       			</div>
 				  <div className={styles.obFormslabel3}>

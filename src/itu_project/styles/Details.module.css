@@ -1,4 +1,4 @@
-.bhjbhj4cjccs94c {
+.item {
     position: absolute;
     top: 10px;
     left: 198px;
@@ -74,5 +74,15 @@
     font-size: 36px;
     color: #e0ffff;
     font-family: Inter;
+}
+
+.button_delete{
+    position: absolute;
+    top: 378px;
+    right: 35px;
+    color: #fff;
+    display: inline-block;
+    width: 144px;
+    height: 44px;
 }
 
