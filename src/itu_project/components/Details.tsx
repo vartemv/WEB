@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import styles from '../styles/Details.module.css';
 import {Order} from 'types';
 
@@ -9,6 +9,10 @@ export type DetailsType = {
 }
 
 const Details:FunctionComponent<DetailsType> = ({ className="", order, onDelete }) => {
+
+	const [temp_order, SetTempData] = useState<Order>(
+		order
+	)
 
 	const delete_id = () => {
 		fetch('/api/delete_order',{
@@ -23,10 +27,24 @@ const Details:FunctionComponent<DetailsType> = ({ className="", order, onDelete 
 			});
 	};
 
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        SetTempData((prev) => ({
+            ...prev,
+            [name]: value, // Dynamically update the correct field based on the input's name
+        }));
+    };
+
   	return (
     		<div className={styles.details}>
       			<div className={styles.item}>{order.id}</div>
-      			<div className={styles.something}>{order.item}</div>
+				  <input
+							name = "item"
+                    		className={`${styles.something} ${styles.dynamic_input}`}
+                    		value={temp_order.item}
+							onChange={handleInputChange}
+                		/>
+      			{/* <div className={styles.something}>{order.item}</div> */}
       			<div className={styles.somewhereSt}>{order.address}</div>
       			<div className={styles.div}>10/10/10</div>
       			<img className={styles.amazonIcon} alt="" src="Shopify.png" />

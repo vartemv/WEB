@@ -5,7 +5,20 @@
     display: inline-block;
     width: 417px;
 }
+
+.dynamic_input{
+    background-color: transparent;
+    min-width: 50px; /* Minimum width */
+    max-width: 100%; /* Limits the width to 100% of the parent */
+    width: auto;
+    padding: 4px;
+    outline: none;
+    resize: horizontal; /* Allows resizing */
+    overflow: hidden;
+}
+
 .something {
+    
     position: absolute;
     top: 79px;
     left: 38px;
