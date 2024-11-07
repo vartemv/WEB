@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS orders (
   address VARCHAR(255) NOT NULL,        -- Delivery address
   status VARCHAR(15) NOT NULL,
   price INTEGER NOT NULL,
-  order_date DATE
+  order_date VARCHAR(13) NOT NULL
  );
