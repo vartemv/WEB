@@ -17,8 +17,11 @@
     overflow: hidden;
 }
 
+.non_interactable {
+    pointer-events: none;   /* Disables mouse events */
+}
+
 .something {
-    
     position: absolute;
     top: 79px;
     left: 38px;
@@ -54,8 +57,6 @@
     left: 38px;
     color: #fff;
     display: inline-block;
-    width: 144px;
-    height: 44px;
 }
 .amazonIcon {
     position: absolute;
@@ -71,8 +72,6 @@
     left: 38px;
     color: #fff;
     display: inline-block;
-    width: 144px;
-    height: 58px;
 }
 .details {
     width: 813px;
@@ -87,6 +86,17 @@
     font-size: 36px;
     color: #e0ffff;
     font-family: Inter;
+}
+
+.image_update{
+    position: absolute;
+    top: 250px;
+    right: 30px;
+    color: #fff;
+    display: inline-block;
+    width: 100px;
+    height: 100;
+    cursor: pointer;
 }
 
 .button_delete{

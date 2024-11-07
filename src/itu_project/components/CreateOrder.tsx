@@ -7,13 +7,21 @@ export type CreateOrderType = {
 	onCreation?: () => void;
 }
 
+const getCurrentDateString = () => {
+	const date = new Date();
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+	const day = String(date.getDate()).padStart(2, '0');
+	return `${year}/${month}/${day}`;
+};
+
 const CreateOrder:FunctionComponent<CreateOrderType> = ({ className="", onCreation}) => {
 	const [orderData, setOrderData] = useState<Order>({
 		item: '',
 		name: '',
 		address: '',
 		price: 0,
-		order_date: new Date(),
+		order_date: getCurrentDateString(),
 		status: "Active",
 		id: NaN
 	})

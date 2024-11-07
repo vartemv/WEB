@@ -5,5 +5,5 @@ export interface Order {
     address: string;
     status: string;
     price: number;
-    order_date: Date;
+    order_date: string;
 }

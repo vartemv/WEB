@@ -35,7 +35,7 @@ const Desktop: FunctionComponent = () => {
         setCreateOrderOpen(false);
     };
 
-    const handleOrderDeleted = async () => {
+    const handleOrderChanged = async () => {
         refreshOrder();
         setDetailsOpen(false);
     };
@@ -103,7 +103,7 @@ const Desktop: FunctionComponent = () => {
                 overlayColor="rgba(113, 113, 113, 0.3)"
                 placement="Centered"
                 onOutsideClick={closeDetails}>
-                <Details order={selectedOrder} onDelete={handleOrderDeleted}/>
+                <Details order={selectedOrder} onChange={handleOrderChanged}/>
             </PortalPopup>
         )}
         {isCreateOrderOpen && (
