@@ -52,9 +52,9 @@ const CreateOrder:FunctionComponent<CreateOrderType> = ({ className="", onCreati
 
   	return (
     		<div className={[styles.createOrder, className].join(' ')}>
-      			<div className={styles.createOrder1}>Create order</div>
+      			
       			<div className={styles.obFormslabel}>
-        				<div className={styles.label}>item name</div>
+        				<div className={styles.label}>Product</div>
         				<input
 							name="item"
                     		className={styles.frame}
@@ -64,7 +64,7 @@ const CreateOrder:FunctionComponent<CreateOrderType> = ({ className="", onCreati
                 		/>
       			</div>
       			<div className={styles.obFormslabel1}>
-        				<div className={styles.label}>address</div>
+        				<div className={styles.label}>Address</div>
 						<input
 							name = "address"
                     		className={styles.frame}
@@ -74,7 +74,7 @@ const CreateOrder:FunctionComponent<CreateOrderType> = ({ className="", onCreati
                 		/>
       			</div>
       			<div className={styles.obFormslabel2}>
-        				<div className={styles.label}>item price</div>
+        				<div className={styles.label}>Price</div>
         				<input
 							name = "price"
                     		className={styles.frame}
@@ -94,7 +94,7 @@ const CreateOrder:FunctionComponent<CreateOrderType> = ({ className="", onCreati
                 		/>
       			</div>
 				  <button onClick={add} className={styles.submitButton}>Submit Order</button>
-      			<img className={styles.createOrderChild} alt="" src="Rectangle 4.png" />
+      			
     		</div>);
 };
 

@@ -1,115 +1,120 @@
-import Image from "next/image";
-import localFont from "next/font/local";
+import { FunctionComponent, useState, useEffect, useCallback } from 'react';
+import Details from "../components/Details";
+import PortalPopup from "../components/PortalPopup";
+import CreateOrder from "../components/CreateOrder";
+import styles from '../styles/Desktop.module.css';
+import {Order} from 'types';
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
-
-export default function Home() {
-  return (
-    <div
-      className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              pages/index.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+const get_orders = async () => {
+    const response = await fetch("/api/get_order");
+    const obj = await response.json();
+    return obj.data;
 }
+
+const Desktop: FunctionComponent = () => {
+
+    const [orders, setOrders] = useState<Order[]>([]); 
+    const [isDetailsOpen, setDetailsOpen] = useState(false);
+    const [isCreateOrderOpen, setCreateOrderOpen] = useState(false);
+    const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+
+    const refreshOrder = async() => {
+        const data = await get_orders();
+        setOrders(data);
+    }
+
+    useEffect(() => {
+        refreshOrder()
+    }, []);
+
+    const handleOrderCreated = async () => {
+        refreshOrder();
+        setCreateOrderOpen(false);
+    };
+
+    const handleOrderChanged = async () => {
+        refreshOrder();
+        setDetailsOpen(false);
+    };
+
+    const openDetails = useCallback((order: Order) => {
+        setSelectedOrder(order);
+        setDetailsOpen(true);
+    }, []);
+
+    const closeDetails = useCallback(() => {
+        setDetailsOpen(false);
+    }, []);
+
+
+    const openCreateOrder = useCallback(() => {
+        setCreateOrderOpen(true);
+    }, []);
+
+    const closeCreateOrder = useCallback(() => {
+        setCreateOrderOpen(false);
+    }, []);
+
+    return (<>
+        <div className={styles.desktop1}>
+            <div className={styles.dashboard}>
+                <img className={styles.dashboardChild} alt="" src="Ellipse_photo.svg" />
+                <div className="spacer" />
+                    <div className={styles.iconsGroup}>
+                        <img className={styles.homeIcon} alt="" src="Home.png" />
+                        <img className={styles.homeIcon} alt="" src="Trolley.png" />
+                        <img className={styles.homeIcon} alt="" src="Open Parcel.png" />
+                        <img className={styles.homeIcon} alt="" src="Graph.png" />
+                        <img className={styles.homeIcon} alt="" src="Gears.png" />
+                    </div>
+            </div>
+            <div className={styles.OrdersGrid}>
+            {orders.map((order) => (
+                <div key={order.id} className={styles.order} onClick={() => openDetails(order)}>
+                    <img className={styles.order1Child} alt="" src="rectangle_order.png" />
+                    <div className={styles.printedItem}>{order.item}</div>
+                    <div className={styles.johnJohnssss}>{order.name}</div>
+                    <div className={styles.johnWatsStreet}>{order.address}</div>
+                    <div className={styles.hc49bcdsml}>{order.id}</div>
+                    <img className={styles.shopifyIcon} alt="" src="Shopify.png" />
+                    <div className={styles.order1Item}>
+                    <div className={styles.status}>{order.status}</div>
+                    </div>
+                </div>
+            ))}
+            </div>
+            <div className={styles.filters}>
+                <div className={styles.allWrapper}>
+                    All
+                </div> 
+                <div className={styles.activeWrapper}>
+                    Active
+                </div>
+                <div className={styles.notActiveWrapper}>
+                    Shipped
+                </div>
+            </div>
+            <div className={styles.add} onClick={openCreateOrder}>
+                <div className={styles.addChild} />
+                <img className={styles.plusIcon} alt="" src="Plus.png" />
+            </div>
+        </div>
+        {isDetailsOpen && selectedOrder &&(
+            <PortalPopup
+                overlayColor="rgba(113, 113, 113, 0.3)"
+                placement="Centered"
+                onOutsideClick={closeDetails}>
+                <Details order={selectedOrder} onChange={handleOrderChanged}/>
+            </PortalPopup>
+        )}
+        {isCreateOrderOpen && (
+            <PortalPopup
+                overlayColor="rgba(113, 113, 113, 0.3)"
+                placement="Centered"
+                onOutsideClick={closeCreateOrder}>
+                <CreateOrder onCreation={handleOrderCreated}/>
+            </PortalPopup>
+        )}</>);
+};
+
+export default Desktop;
