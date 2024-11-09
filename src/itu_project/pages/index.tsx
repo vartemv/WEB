@@ -4,6 +4,7 @@ import PortalPopup from "../components/PortalPopup";
 import CreateOrder from "../components/CreateOrder";
 import styles from '../styles/Desktop.module.css';
 import {Order} from 'types';
+import { BarChart } from 'recharts';
 
 const get_orders = async () => {
     const response = await fetch("/api/get_order");
