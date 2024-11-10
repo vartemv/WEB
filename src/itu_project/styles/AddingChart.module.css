@@ -1,0 +1,92 @@
+.addingChart {
+    display: flex;
+    max-width: 550px;
+    flex-direction: column;
+    letter-spacing: 0.1px;
+    font: 500 14px/20px Roboto;
+    /* height: 550; */
+  }
+  
+  
+  
+
+  .optionsWrapper {
+    display: flex;
+
+    align-items: start;
+    padding: 0; 
+  }
+  
+  @media (max-width: 991px) {
+    .optionsWrapper {
+      max-width: 100%;
+      
+    }
+  }
+  
+
+.optionContainer {
+  position: relative; 
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: black;
+  white-space: nowrap;
+}
+ 
+  
+  .optionLabel {
+    color: #c7c7c7;
+    align-self: center;
+    z-index: 10;
+  }
+  
+  .optionButton {
+    border-radius: 20px;
+    background-color: #65558f;
+    /* display: flex; */
+    gap: 20px;
+    color: #fff;
+    white-space: nowrap;
+    padding: 1px 9px 1px 21px;
+    /* width: 100%; */
+    /* justify-content: space-between; */
+    align-items: left;
+    border: none;
+    /* cursor: pointer; */
+  }
+  
+  .dropdownIcon {
+    aspect-ratio: 2.14;
+    object-fit: contain;
+    object-position: center;
+    width: 15px;
+    border-radius: 0;
+    margin: auto 0;
+  }
+  
+  .optionList {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    z-index: 100;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .optionItem {
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  
+  .optionItem:hover {
+    background-color: #f0f0f0;
+  }
+  

@@ -5,6 +5,9 @@ import PortalPopup from "../components/PortalPopup";
 import CreateOrder from "../components/CreateOrder";
 import styles from '../styles/Desktop.module.css';
 import {Order} from 'types';
+import { useRouter } from 'next/router';
+
+
 
 const get_orders = async () => {
     const response = await fetch("/api/get_order");
@@ -15,6 +18,7 @@ const get_orders = async () => {
 
 const Desktop: FunctionComponent = () => {
 
+    const router = useRouter(); 
     const [orders, setOrders] = useState<Order[]>([]); 
     const [isDetailsOpen, setDetailsOpen] = useState(false);
     const [isCreateOrderOpen, setCreateOrderOpen] = useState(false);
@@ -68,6 +72,10 @@ const Desktop: FunctionComponent = () => {
         setActiveFilter(filter);
     };
 
+    const navigateToAnalytics = () => {
+        router.push('/analytics'); 
+    };
+
     return (<>
         <div className={styles.desktop1}>
             <div className={styles.dashboard}>
@@ -76,7 +84,7 @@ const Desktop: FunctionComponent = () => {
                     <div className={styles.iconsGroup}>
                         <img className={styles.homeIcon} alt="*" src="Home.png" />
                         <img className={styles.homeIcon} alt="*" src="Cart.png" />
-                        <img className={styles.homeIcon} alt="*" src="Graph.png" />
+                        <img className={styles.homeIcon} alt="*" src="Graph.png" onClick={navigateToAnalytics} />
                         <img className={styles.homeIcon} alt="*" src="Parcel.png" />
                         <img className={styles.homeIcon} alt="*" src="Gears.png" />
                     </div>
