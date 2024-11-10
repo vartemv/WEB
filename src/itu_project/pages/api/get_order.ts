@@ -8,7 +8,15 @@ type Data = {
  
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
 	try {
-		const products = await prisma.order.findMany();
+		const products = await prisma.order.findMany(
+			{
+				orderBy: [
+					{
+						id: 'asc',
+					}
+				]
+			}
+		);
 		res.status(200).json({ success: true, data: products });
 	} catch (error) {
         console.log(error);

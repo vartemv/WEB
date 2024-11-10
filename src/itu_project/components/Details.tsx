@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useState, useRef } from 'react';
 import styles from '../styles/Details.module.css';
 import { Order } from 'types';
 
@@ -11,6 +11,23 @@ export type DetailsType = {
 const Details: FunctionComponent<DetailsType> = ({ className = "", order, onChange }) => {
 	const [temp_order, SetTempData] = useState<Order>(order);
 	const [isEditing, setIsEditing] = useState(false);
+	const HighlightElementsRef = useRef<HTMLDivElement>(null);
+
+	const triggerHighlight = () => {
+		if (HighlightElementsRef.current) {
+        const elements = HighlightElementsRef.current.querySelectorAll('.highlight-target'); // Adjust selector as needed
+
+        elements.forEach((el) => {
+            el.classList.add(styles.editable); // Add pulse class
+
+            // Remove the class after animation ends
+            // el.addEventListener('animationend', () => {
+            //     el.classList.remove(styles.pulseAnimation);
+            // }, { once: true }); // Ensures the event listener is removed after it triggers once
+        });
+	}
+    };
+
 
 	const delete_id = () => {
 		fetch('/api/delete_order', {
@@ -41,6 +58,7 @@ const Details: FunctionComponent<DetailsType> = ({ className = "", order, onChan
 
 	const updating = () => {
 		setIsEditing(true);
+		triggerHighlight();
 	};
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,13 +75,13 @@ const Details: FunctionComponent<DetailsType> = ({ className = "", order, onChan
 			<div className={styles.centerWrapper}>
 				<div className={styles.item_id}>{order.id}</div>
 			</div>
-				
+			<div ref={HighlightElementsRef}>	
 			<div className={styles.infoGrid}>
 			<label htmlFor="item" className={`${styles.labelItem} ${styles.label}`}>Item</label>
 				<input
 					id="item"
 					name="item"
-					className={`${styles.something} ${styles.dynamic_input}`}
+					className={`${styles.something} ${styles.dynamic_input} highlight-target`}
 					value={temp_order.item}
 					onChange={handleInputChange}
 					readOnly={!isEditing}
@@ -77,7 +95,7 @@ const Details: FunctionComponent<DetailsType> = ({ className = "", order, onChan
 				<input
 					id="address"
 					name="address"
-					className={`${styles.somewhereSt} ${styles.dynamic_input}`}
+					className={`${styles.somewhereSt} ${styles.dynamic_input} highlight-target`}
 					value={temp_order.address}
 					onChange={handleInputChange}
 					readOnly={!isEditing}
@@ -91,7 +109,7 @@ const Details: FunctionComponent<DetailsType> = ({ className = "", order, onChan
 				<input
 					id="order_date"
 					name="order_date"
-					className={`${styles.div} ${styles.dynamic_input}`}
+					className={`${styles.div} ${styles.dynamic_input} highlight-target`}
 					value={temp_order.order_date}
 					onChange={handleInputChange}
 					readOnly={!isEditing}
@@ -105,13 +123,13 @@ const Details: FunctionComponent<DetailsType> = ({ className = "", order, onChan
 				<input
 					id="price"
 					name="price"
-					className={`${styles.div1} ${styles.dynamic_input}`}
+					className={`${styles.div1} ${styles.dynamic_input} highlight-target`}
 					value={temp_order.price}
 					onChange={handleInputChange}
 					readOnly={!isEditing}
 				/>
 				</div>
-			
+			</div>
 
 			{/* Additional content like images and buttons */}
 			

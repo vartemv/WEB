@@ -90,11 +90,11 @@ const Desktop: FunctionComponent = () => {
                 <img className={styles.UserPicture} alt="" src="Ellipse_photo.svg" />
                 <div className="spacer" />
                     <div className={styles.iconsGroup}>
-                        <img className={styles.homeIcon} alt="" src="Home.png" />
-                        <img className={styles.homeIcon} alt="" src="Cart.png" />
-                        <img className={styles.homeIcon} alt="" src="Graph.png" />
-                        <img className={styles.homeIcon} alt="" src="Parcel.png" />
-                        <img className={styles.homeIcon} alt="" src="Gears.png" />
+                        <img className={styles.homeIcon} alt="*" src="Home.png" />
+                        <img className={styles.homeIcon} alt="*" src="Cart.png" />
+                        <img className={styles.homeIcon} alt="*" src="Graph.png" />
+                        <img className={styles.homeIcon} alt="*" src="Parcel.png" />
+                        <img className={styles.homeIcon} alt="*" src="Gears.png" />
                     </div>
             </div>
             <FlipMove className={styles.OrdersGrid}>
@@ -127,7 +127,7 @@ const Desktop: FunctionComponent = () => {
                     <hr className={styles.Separator} />
                     <div className={styles.OrderId}> Order # {order.id}</div>
                     <img className={styles.MarketplaceIcon} alt="" src="Shopify.svg" />
-                    <div className={styles.StatusWrapper}>
+                    <div className={`${styles.StatusWrapper} ${order.status == "Shipped" ? styles.StatusShipped : styles.StatusActive}`} >
                         <div className={styles.Status}>{order.status}</div>
                     </div>
                 </div>

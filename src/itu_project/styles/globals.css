@@ -13,6 +13,7 @@
   --button-text-color: #ffffff;
   --add-button-color: #64558f;
   --active-color: #98FF98;
+  --not-active-color: #1f82897c;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -17,6 +17,11 @@
     padding: 20px;
 }
 
+.editable {
+    box-shadow: 0 0 5px rgba(0, 188, 212, 0.8);
+    transition: box-shadow 0.3s ease;
+}
+
 .item_id {
     width: 12vw;
     color: #fff;
@@ -36,13 +41,15 @@
 
 .dynamic_input {
     background-color: transparent;
-    min-width: 50px; /* Minimum width */
-    max-width: 100%; /* Limits the width to 100% of the parent */
+    min-width: 10px; /* Minimum width */
+    max-width: 70%; /* Limits the width to 100% of the parent */
     width: auto;
     padding: 4px;
     outline: none;
     resize: horizontal; /* Allows resizing */
     overflow: hidden;
+    white-space: nowrap;
+    border-radius: 10px;
 }
 
 .non_interactable {
