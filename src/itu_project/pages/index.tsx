@@ -98,12 +98,17 @@ const Desktop: FunctionComponent = () => {
                     </div>
             </div>
             <FlipMove className={styles.OrdersGrid}>
-            
-            {orders.map((order) => (
+            {orders
+            .filter((order) => {
+                if (activeFilter === "all") return true;
+                return activeFilter === order.status;
+            })
+            .map((order) => (
                 <div key={order.id} className={styles.order} draggable
                 onDragStart={() => handleDragStart(order.id)}
                 onDragOver={handleDragOver}
-                onDrop={() => handleDrop(order.id)} onClick={() => openDetails(order)}>
+                onDrop={() => handleDrop(order.id)} 
+                onClick={() => openDetails(order)}>
                     
                     <div className={styles.TextGrid}>
                         <div className={styles.ItemCont}>
@@ -127,16 +132,15 @@ const Desktop: FunctionComponent = () => {
                     </div>
                 </div>
             ))}
-            
             </FlipMove>
             <div className={styles.filters}>
                 <div className={`${styles.allWrapper} ${activeFilter ===  "all" ? styles.ChoosedFilter : '' }`} onClick={() => handleFilterClick("all")}>
                     All
                 </div> 
-                <div className={`${styles.activeWrapper} ${activeFilter ===  "active" ? styles.ChoosedFilter : '' }`} onClick={() => handleFilterClick("active")}>
+                <div className={`${styles.activeWrapper} ${activeFilter ===  "Active" ? styles.ChoosedFilter : '' }`} onClick={() => handleFilterClick("Active")}>
                     Active
                 </div>
-                <div className={`${styles.notActiveWrapper} ${activeFilter ===  "shipped" ? styles.ChoosedFilter : '' }`} onClick={() => handleFilterClick("shipped")}>
+                <div className={`${styles.notActiveWrapper} ${activeFilter ===  "Shipped" ? styles.ChoosedFilter : '' }`} onClick={() => handleFilterClick("Shipped")}>
                     Shipped
                 </div>
             </div>
