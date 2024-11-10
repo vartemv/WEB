@@ -116,7 +116,7 @@ const Details: FunctionComponent<DetailsType> = ({ className = "", order, onChan
 			
 
 			{/* Additional content like images and buttons */}
-			<img className={styles.amazonIcon} alt="" src="Shopify.png" />
+			
 			<img src="edit_icon.png" className={styles.image_update} onClick={updating} />
 			{isEditing ? (
 				<button className={styles.button_delete} onClick={update_order}>Update</button>

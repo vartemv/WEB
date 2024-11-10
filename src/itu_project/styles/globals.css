@@ -3,8 +3,16 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background-color: #edf1fa;
+  --sidebar-bg-color: #fef7ff;
+  --accent-color: #b87333; /* Coppery accent */
+  --card-bg-color: #ffffff;
+  --text-color: #050505; /* Black */
+  --highlight-color: #6b4ca5; /* Soft purple */
+  --goal-color: #817bbd; /* Light violet for goals */
+  --button-text-color: #ffffff;
+  --add-button-color: #64558f;
+  --active-color: #98FF98;
 }
 
 @media (prefers-color-scheme: dark) {
