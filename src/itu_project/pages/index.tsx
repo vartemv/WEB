@@ -1,4 +1,5 @@
 import { FunctionComponent, useState, useEffect, useCallback } from 'react';
+import FlipMove from 'react-flip-move';
 import Details from "../components/Details";
 import PortalPopup from "../components/PortalPopup";
 import CreateOrder from "../components/CreateOrder";
@@ -18,6 +19,7 @@ const Desktop: FunctionComponent = () => {
     const [isCreateOrderOpen, setCreateOrderOpen] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
     const [activeFilter, setActiveFilter] = useState<string>("all");
+    const [draggedOrderId, setDraggedOrderId] = useState<number | null>(null);
 
     const refreshOrder = async() => {
         const data = await get_orders();
@@ -27,6 +29,28 @@ const Desktop: FunctionComponent = () => {
     useEffect(() => {
         refreshOrder()
     }, []);
+
+    const handleDragStart = (orderId: number) => {
+        setDraggedOrderId(orderId);
+    };
+
+    const handleDragOver = (event: React.DragEvent) => {
+        event.preventDefault();
+    };
+
+    const handleDrop = (targetOrderId: number) => {
+        if (draggedOrderId === null) return;
+
+        const draggedOrderIndex = orders.findIndex(order => order.id === draggedOrderId);
+        const targetOrderIndex = orders.findIndex(order => order.id === targetOrderId);
+
+        const updatedOrders = [...orders];
+        const [draggedOrder] = updatedOrders.splice(draggedOrderIndex, 1);
+        updatedOrders.splice(targetOrderIndex, 0, draggedOrder);
+
+        setOrders(updatedOrders);
+        setDraggedOrderId(null);
+    };
 
     const handleOrderCreated = async () => {
         refreshOrder();
@@ -68,14 +92,18 @@ const Desktop: FunctionComponent = () => {
                     <div className={styles.iconsGroup}>
                         <img className={styles.homeIcon} alt="" src="Home.png" />
                         <img className={styles.homeIcon} alt="" src="Cart.png" />
-                        <img className={styles.homeIcon} alt="" src="Parcel.png" />
                         <img className={styles.homeIcon} alt="" src="Graph.png" />
+                        <img className={styles.homeIcon} alt="" src="Parcel.png" />
                         <img className={styles.homeIcon} alt="" src="Gears.png" />
                     </div>
             </div>
-            <div className={styles.OrdersGrid}>
+            <FlipMove className={styles.OrdersGrid}>
+            
             {orders.map((order) => (
-                <div key={order.id} className={styles.order} onClick={() => openDetails(order)}>
+                <div key={order.id} className={styles.order} draggable
+                onDragStart={() => handleDragStart(order.id)}
+                onDragOver={handleDragOver}
+                onDrop={() => handleDrop(order.id)} onClick={() => openDetails(order)}>
                     
                     <div className={styles.TextGrid}>
                         <div className={styles.ItemCont}>
@@ -99,7 +127,8 @@ const Desktop: FunctionComponent = () => {
                     </div>
                 </div>
             ))}
-            </div>
+            
+            </FlipMove>
             <div className={styles.filters}>
                 <div className={`${styles.allWrapper} ${activeFilter ===  "all" ? styles.ChoosedFilter : '' }`} onClick={() => handleFilterClick("all")}>
                     All

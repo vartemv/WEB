@@ -2,7 +2,7 @@
     width: 813px;
     position: relative;
     border-radius: 50px;
-    background-color: rgba(0, 0, 139, 0.81);
+    background-color: var(--add-button-color);
     height: 352px;
     overflow: hidden;
     max-width: 100%;
@@ -30,7 +30,7 @@
 
 .label {
     font-size: 18px;
-    color: #e0ffff;
+    color: #fff;
     margin-bottom: 8px;
 }
 
@@ -43,12 +43,13 @@
     overflow: hidden;
     padding: 10px 15px;
     font-size: 14px;
-    color: #d2d2d2;
+    color: #000000;
 }
 
 .obFormslabel, .obFormslabel1, .obFormslabel2, .obFormslabel3 {
     display: flex;
     flex-direction: column;
+    
 }
 
 .submitButton {

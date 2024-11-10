@@ -2,7 +2,7 @@
     width: 813px;
     position: relative;
     border-radius: 50px;
-    background-color: rgba(0, 0, 139, 0.81);
+    background-color: var(--add-button-color);
     height: 452px;
     overflow: hidden;
     max-width: 100%;
@@ -19,7 +19,7 @@
 
 .item_id {
     width: 12vw;
-
+    color: #fff;
 }
 
 .centerWrapper {
@@ -51,14 +51,17 @@
 
 .something {
     position: relative;
+    color: #ffff;
 }
 
 .somewhereSt1 {
     position: relative;
+    color: #ffff;
 }
 
 .somewhereSt {
     position: relative;
+    color: #ffff;
 }
 
 .imageIcon {
@@ -141,6 +144,7 @@
 
 .labelItem, .labelAddress, .labelOrder, .labelPrice {
     text-align: left;
+    color: #fff;
 }
 
 /* Specific label styling for each input */

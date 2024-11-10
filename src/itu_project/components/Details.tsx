@@ -57,8 +57,6 @@ const Details: FunctionComponent<DetailsType> = ({ className = "", order, onChan
 			<div className={styles.centerWrapper}>
 				<div className={styles.item_id}>{order.id}</div>
 			</div>
-			
-			
 				
 			<div className={styles.infoGrid}>
 			<label htmlFor="item" className={`${styles.labelItem} ${styles.label}`}>Item</label>
