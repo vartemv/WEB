@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useEffect, useCallback } from 'react';
+import { FunctionComponent, useState, useEffect, useCallback, useMemo } from 'react';
 import FlipMove from 'react-flip-move';
 import Details from "../components/Details";
 import PortalPopup from "../components/PortalPopup";
@@ -8,6 +8,7 @@ import {Order} from 'types';
 
 const get_orders = async () => {
     const response = await fetch("/api/get_order");
+    if (!response.ok) throw new Error("Failed to fetch orders");
     const obj = await response.json();
     return obj.data;
 }
@@ -19,7 +20,6 @@ const Desktop: FunctionComponent = () => {
     const [isCreateOrderOpen, setCreateOrderOpen] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
     const [activeFilter, setActiveFilter] = useState<string>("all");
-    const [draggedOrderId, setDraggedOrderId] = useState<number | null>(null);
 
     const refreshOrder = async() => {
         const data = await get_orders();
@@ -30,27 +30,11 @@ const Desktop: FunctionComponent = () => {
         refreshOrder()
     }, []);
 
-    const handleDragStart = (orderId: number) => {
-        setDraggedOrderId(orderId);
-    };
 
-    const handleDragOver = (event: React.DragEvent) => {
-        event.preventDefault();
-    };
+    const filteredOrders = useMemo(() => {
+        return orders.filter((order) => activeFilter === "all" || activeFilter === order.status);
+    }, [orders, activeFilter]);
 
-    const handleDrop = (targetOrderId: number) => {
-        if (draggedOrderId === null) return;
-
-        const draggedOrderIndex = orders.findIndex(order => order.id === draggedOrderId);
-        const targetOrderIndex = orders.findIndex(order => order.id === targetOrderId);
-
-        const updatedOrders = [...orders];
-        const [draggedOrder] = updatedOrders.splice(draggedOrderIndex, 1);
-        updatedOrders.splice(targetOrderIndex, 0, draggedOrder);
-
-        setOrders(updatedOrders);
-        setDraggedOrderId(null);
-    };
 
     const handleOrderCreated = async () => {
         refreshOrder();
@@ -98,16 +82,9 @@ const Desktop: FunctionComponent = () => {
                     </div>
             </div>
             <FlipMove className={styles.OrdersGrid}>
-            {orders
-            .filter((order) => {
-                if (activeFilter === "all") return true;
-                return activeFilter === order.status;
-            })
+            {filteredOrders
             .map((order) => (
-                <div key={order.id} className={styles.order} draggable
-                onDragStart={() => handleDragStart(order.id)}
-                onDragOver={handleDragOver}
-                onDrop={() => handleDrop(order.id)} 
+                <div key={order.id} className={styles.order}
                 onClick={() => openDetails(order)}>
                     
                     <div className={styles.TextGrid}>
