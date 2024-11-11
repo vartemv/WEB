@@ -1,0 +1,99 @@
+.stockTable {
+    border-radius: 10px;
+    width: 100%;
+    /* max-width: 1420px; */
+    color: #000;
+    text-align: center;
+    font: 500 20px Poppins, sans-serif;
+    border: 1px solid #65558f;
+  }
+  
+  .tableHeader {
+    display: flex;
+    min-height: 60px;
+    width: 100%;
+    padding-right: 20px;
+    align-items: center;
+    gap: 29px;
+    color: #8f8f8f;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+  .tableCell {
+    align-self: stretc;
+    flex: 1;
+    min-width: 200px;
+    width: 200px;
+    max-width: 200px;
+    margin: auto 0;
+  }
+  
+  .tableRow {
+    border-top: 1px solid #65558f;
+    display: flex;
+    min-height: 60px;
+    width: 100%;
+    align-items: center;
+    gap: 29px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 4px 20px 4px 0;
+  }
+
+  .tableRow:hover {
+    background-color: #f0f0f0; /* Light grey color on hover */
+  }
+  
+  .inStock { color: #10a760; }
+  .lowStock { color: #e19133; }
+  .outOfStock { color: #da3e33; }
+
+  .meatballs {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+  
+  @media (max-width: 991px) {
+    .stockTable,
+    .tableHeader,
+    .tableRow {
+      max-width: 100%;
+    }
+    
+    .tableCell {
+      white-space: initial;
+    }
+  }
+
+
+
+
+  .quantityContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+  
+  .changeButton {
+    width: 30px;
+    height: 3w0px;
+    display: none;
+    padding: 5px;
+    background-color: #ddd;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+  }
+  
+  .changeButton:hover {
+    background-color: #ccc;
+  }
+  
+  /* Show buttons only when the row is hovered */
+  .tableRow:hover .changeButton {
+    display: inline-flex;
+  }

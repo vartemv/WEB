@@ -1,0 +1,19 @@
+.newStockButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    background-color: #65558f;
+    color: #fff;
+    text-align: center;
+    padding: 10px 15px;
+    font: 400 24px Poppins, sans-serif;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .buttonIcon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
