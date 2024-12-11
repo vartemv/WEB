@@ -1,6 +1,8 @@
 import { FunctionComponent, useState } from 'react';
 import styles from '../styles/CreateOrder.module.css';
 import {Order} from 'types';
+import useSWR from 'swr';
+import fetcher from 'swr';
 
 export type CreateOrderType = {
   	className?: string;
@@ -26,6 +28,9 @@ const CreateOrder:FunctionComponent<CreateOrderType> = ({ className="", onCreati
 		id: NaN
 	})
 
+  const { mutate } = useSWR('/api/get_order', fetcher);
+
+
 	const add = () => {
 		console.log(orderData);
 		fetch('/api/add_order', {
@@ -38,6 +43,7 @@ const CreateOrder:FunctionComponent<CreateOrderType> = ({ className="", onCreati
 			.then((res) => res.json())
 			.then(({ data }) => {
 				console.log(data);
+        mutate(); // Revalidate the data
 				if(onCreation) onCreation();
 			});
 	};
