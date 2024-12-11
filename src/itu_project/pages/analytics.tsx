@@ -6,6 +6,7 @@ import AddChart from '../components/analytics_components/GraphWindow';
 import GraphWindow from '../components/analytics_components/GraphWindow';
 import { Order } from 'types';
 import { getTotalOrders } from '@/lib/orderUtils';
+import StatisticItem from '../components/analytics_components/StatisticsItem';
 
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
