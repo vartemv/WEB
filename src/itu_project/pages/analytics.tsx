@@ -6,6 +6,7 @@ import GraphWindow from '../components/analytics_components/GraphWindow';
 import { Order } from 'types';
 import { getTotalOrders } from '@/lib/orderUtils';
 import StatisticItem from '../components/analytics_components/StatisticsItem';
+import GraphManager from '@/components/analytics_components/GraphManager';
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
@@ -41,7 +42,7 @@ const Analytics: FunctionComponent = () => {
                 <StatisticItem label="Total orders" value={getTotalOrders(orders)} />
               </div>
             </section>
-            <GraphWindow orders={orders} />
+            <GraphManager orders={orders} />
           </div>
           <div className={styles.column}>
             {/* <NotesCard /> */}

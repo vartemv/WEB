@@ -8,7 +8,7 @@ type Data = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   try {
-    const settings = await prisma.ChartSetting.findFirst({
+    const settings = await prisma.ChartSetting.findMany({
       orderBy: {
         createdat: 'desc',
       },

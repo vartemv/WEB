@@ -5,32 +5,37 @@ import { Order } from 'types';
 
 type GraphWindowProps = {
   orders: Order[];
+  onCreate: () => void;
+  initialSettings?: ChartSetting; // Add this prop
 };
 
-const GraphWindow: React.FC<GraphWindowProps> = ({ orders }) => {
+interface ChartSetting {
+  id: number;
+  charttype: string;
+  year: string;
+  month: string;
+  itemtype: string;
+}
+
+
+const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSettings }) => {
   const [showChartSelection, setShowChartSelection] = useState(false);
-  const [chartType, setChartType] = useState('Pie');
-  const [year, setYear] = useState('2024');
-  const [month, setMonth] = useState('Current');
-  const [itemType, setItemType] = useState('Orders state');
-  const [showPieChart, setShowPieChart] = useState(false);
+  const [chartType, setChartType] = useState(initialSettings?.charttype || 'Pie');
+  const [year, setYear] = useState(initialSettings?.year || '2024');
+  const [month, setMonth] = useState(initialSettings?.month || 'Current');
+  const [itemType, setItemType] = useState(initialSettings?.itemtype || 'Orders state');
+  const [showPieChart, setShowPieChart] = useState(!!initialSettings);
 
   useEffect(() => {
-    const fetchChartSettings = async () => {
-      const response = await fetch('/api/get_chart_settings');
-      const data = await response.json();
-      if (data.success && data.data) {
-        const { chartType, year, month, itemType } = data.data;
-        setChartType(chartType);
-        setYear(year);
-        setMonth(month);
-        setItemType(itemType);
-        setShowPieChart(true);
-      }
-    };
-
-    fetchChartSettings();
-  }, []);
+    if (initialSettings) {
+      setChartType(initialSettings.charttype);
+      setYear(initialSettings.year);
+      setMonth(initialSettings.month);
+      setItemType(initialSettings.itemtype);
+      setShowPieChart(true);
+      setShowChartSelection(false);
+    }
+  }, [initialSettings]);
 
   const handleAddGraphClick = () => {
     setShowChartSelection(true);
@@ -55,6 +60,8 @@ const GraphWindow: React.FC<GraphWindowProps> = ({ orders }) => {
     const data = await response.json();
     if (!data.success) {
       console.error('Failed to save chart settings');
+    } else {
+      onCreate();
     }
   };
 
