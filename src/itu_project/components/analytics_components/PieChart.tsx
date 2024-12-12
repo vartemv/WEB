@@ -7,39 +7,30 @@ type ChartData = {
   value: number;
 };
 
+type PieChartComponentProps = {
+  orders: Order[];
+};
+
 const COLORS = ['#65558f', '#00C49F', '#FFBB28'];
 
-const PieChartComponent: React.FC = () => {
+const PieChartComponent: React.FC<PieChartComponentProps> = ({ orders }) => {
   const [chartData, setChartData] = useState<ChartData[]>([]);
 
-  const fetchOrderStats = async () => {
-    try {
-      const response = await fetch('/api/get_order');
-      const { data } = await response.json();
-      
-      const allOrders = data.length;
-      const shippedOrders = data.filter((order: Order) => order.status === 'Shipped').length;
-      const activeOrders = data.filter((order: Order) => order.status === 'Active').length;
-
-
-      const formattedData: ChartData[] = [
-        { name: 'All Orders', value: allOrders },
-        { name: 'Shipped', value: shippedOrders },
-        { name: 'Active', value: activeOrders },
-      ];
-
-      setChartData(formattedData);
-    } catch (error) {
-      console.error('Error fetching order statistics:', error);
-    }
-  };
-
   useEffect(() => {
-    fetchOrderStats();
-  }, []);
+    const allOrders = orders.length;
+    const shippedOrders = orders.filter((order) => order.status === 'Shipped').length;
+    const activeOrders = orders.filter((order) => order.status === 'Active').length;
+
+    const formattedData: ChartData[] = [
+      { name: 'All Orders', value: allOrders },
+      { name: 'Shipped', value: shippedOrders },
+      { name: 'Active', value: activeOrders },
+    ];
+
+    setChartData(formattedData);
+  }, [orders]);
 
   return (
-
     <ResponsiveContainer width="100%" height={300}>
       <PieChart>
         <Pie
@@ -60,9 +51,7 @@ const PieChartComponent: React.FC = () => {
         <Legend />
       </PieChart>
     </ResponsiveContainer>
-    // </div>
   );
 };
 
 export default PieChartComponent;
-

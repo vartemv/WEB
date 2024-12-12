@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
@@ -27,4 +27,15 @@ model items {
   price           Int
   quantity        Int
   min_stock_level Int
+}
+
+model ChartSetting {
+  id        Int       @id @default(autoincrement())
+  charttype String    @db.VarChar(50)
+  year      String    @db.VarChar(4)
+  month     String    @db.VarChar(20)
+  itemtype  String    @db.VarChar(50)
+  createdat DateTime? @default(now()) @db.Timestamp(6)
+
+  @@map("chart_settings")
 }

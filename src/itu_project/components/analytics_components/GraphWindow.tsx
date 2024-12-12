@@ -1,14 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../../styles/GraphWindow.module.css';
 import PieChartComponent from './PieChart';
+import { Order } from 'types';
 
-const GraphWindow: React.FC = () => {
+type GraphWindowProps = {
+  orders: Order[];
+};
+
+const GraphWindow: React.FC<GraphWindowProps> = ({ orders }) => {
   const [showChartSelection, setShowChartSelection] = useState(false);
   const [chartType, setChartType] = useState('Pie');
   const [year, setYear] = useState('2024');
   const [month, setMonth] = useState('Current');
   const [itemType, setItemType] = useState('Orders state');
   const [showPieChart, setShowPieChart] = useState(false);
+
+  useEffect(() => {
+    const fetchChartSettings = async () => {
+      const response = await fetch('/api/get_chart_settings');
+      const data = await response.json();
+      if (data.success && data.data) {
+        const { chartType, year, month, itemType } = data.data;
+        setChartType(chartType);
+        setYear(year);
+        setMonth(month);
+        setItemType(itemType);
+        setShowPieChart(true);
+      }
+    };
+
+    fetchChartSettings();
+  }, []);
 
   const handleAddGraphClick = () => {
     setShowChartSelection(true);
@@ -18,9 +40,22 @@ const GraphWindow: React.FC = () => {
     setter(event.target.value);
   };
 
-  const handleCreatePieChart = () => {
+  const handleCreatePieChart = async () => {
     setShowPieChart(true);
     setShowChartSelection(false);
+
+    const response = await fetch('/api/save_chart_settings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ chartType, year, month, itemType }),
+    });
+
+    const data = await response.json();
+    if (!data.success) {
+      console.error('Failed to save chart settings');
+    }
   };
 
   return (
@@ -74,7 +109,7 @@ const GraphWindow: React.FC = () => {
       ) : (
         !showPieChart && <a onClick={handleAddGraphClick}>Add chart</a>
       )}
-      {showPieChart && <PieChartComponent />}
+      {showPieChart && <PieChartComponent orders={orders} />}
     </main>
   );
 };

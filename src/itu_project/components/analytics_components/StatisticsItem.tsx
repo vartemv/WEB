@@ -3,7 +3,7 @@ import styles from '../../styles/analytics.module.css';
 
 interface StatisticItemProps {
   label: string;
-  value: string;
+  value: number;
 }
 
 const StatisticItem: React.FC<StatisticItemProps> = ({ label, value }) => {

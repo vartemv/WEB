@@ -2,12 +2,10 @@ import { FunctionComponent } from 'react';
 import useSWR from 'swr';
 import styles from "../styles/analytics.module.css";
 import NotesCard from '../components/analytics_components/NotesCard';
-import AddChart from '../components/analytics_components/GraphWindow';
 import GraphWindow from '../components/analytics_components/GraphWindow';
 import { Order } from 'types';
 import { getTotalOrders } from '@/lib/orderUtils';
 import StatisticItem from '../components/analytics_components/StatisticsItem';
-
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
@@ -40,10 +38,10 @@ const Analytics: FunctionComponent = () => {
                 <h2 className={styles.cardTitle}>Key statistics</h2>
               </div>
               <div className={styles.statisticsGrid}>
-                  <StatisticItem label="Total orders" value={getTotalOrders(orders)} />            
+                <StatisticItem label="Total orders" value={getTotalOrders(orders)} />
               </div>
-          </section>
-            <GraphWindow />
+            </section>
+            <GraphWindow orders={orders} />
           </div>
           <div className={styles.column}>
             {/* <NotesCard /> */}
