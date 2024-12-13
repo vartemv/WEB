@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import GraphWindow from './GraphWindow';
 import { Order } from 'types';
 
-type GraphManagerProps = {
+type GraphWindowProps = {
   orders: Order[];
 };
 
@@ -14,47 +14,56 @@ interface ChartSetting {
   itemtype: string;
 }
 
-const GraphManager: React.FC<GraphManagerProps> = ({ orders }) => {
-    const [graphWindows, setGraphWindows] = useState<number[]>([0]);
-    const [chartSettings, setChartSettings] = useState<ChartSetting[]>([]);
-  
-    useEffect(() => {
-      const loadChartSettings = async () => {
-        try {
-          const response = await fetch('/api/get_chart_settings');
-          const data = await response.json();
-          if (data.success && data.data) {
-            const settings = Array.isArray(data.data) ? data.data : [data.data];
-            setChartSettings(settings);
-            // Create windows for existing charts plus one extra for new chart creation
-            if (settings.length > 0) {
-              setGraphWindows([...Array(settings.length + 1)].map((_, index) => index));
-            }
-          }
-        } catch (error) {
-          console.error('Failed to load chart settings:', error);
+const GraphManager: React.FC<GraphWindowProps> = ({ orders }) => {
+  // Use a tuple of [id, chartSetting] to maintain unique IDs
+  const [graphWindows, setGraphWindows] = useState<[number, ChartSetting | undefined][]>([[0, undefined]]);
+  const [nextId, setNextId] = useState(1);
+
+  useEffect(() => {
+    const loadChartSettings = async () => {
+      try {
+        const response = await fetch('/api/get_chart_settings');
+        const data = await response.json();
+        if (data.success && data.data) {
+          const settings = Array.isArray(data.data) ? data.data : [data.data];
+          // Add type annotation for setting parameter
+          const windows = settings.map((setting: ChartSetting, index) => 
+            [index, setting] as [number, ChartSetting]
+          );
+          windows.push([settings.length, undefined]); 
+          setGraphWindows(windows);
+          setNextId(settings.length + 1);
         }
-      };
-  
-      loadChartSettings();
-    }, []);
-  
-    const handleCreateNewGraphWindow = () => {
-      setGraphWindows(prev => [...prev, prev.length]);
+      } catch (error) {
+        console.error('Failed to load chart settings:', error);
+      }
     };
-  
-    return (
-      <div>
-        {graphWindows.map((id) => (
-          <GraphWindow 
-            key={id} 
-            orders={orders} 
-            onCreate={handleCreateNewGraphWindow}
-            initialSettings={chartSettings[id]}
-          />
-        ))}
-      </div>
-    );
+
+    loadChartSettings();
+  }, []);
+
+  const handleCreateNewGraphWindow = () => {
+    setGraphWindows(prev => [...prev, [nextId, undefined]]);
+    setNextId(prev => prev + 1);
   };
+
+  const handleDeleteWindow = (windowId: number) => {
+    setGraphWindows(prev => prev.filter(([id]) => id !== windowId));
+  };
+
+  return (
+    <div>
+      {graphWindows.map(([id, settings]) => (
+        <GraphWindow 
+          key={id}
+          orders={orders} 
+          onCreate={handleCreateNewGraphWindow}
+          initialSettings={settings}
+          onDelete={() => handleDeleteWindow(id)}
+        />
+      ))}
+    </div>
+  );
+};
 
 export default GraphManager;

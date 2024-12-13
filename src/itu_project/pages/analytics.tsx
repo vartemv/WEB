@@ -45,7 +45,7 @@ const Analytics: FunctionComponent = () => {
             <GraphManager orders={orders} />
           </div>
           <div className={styles.column}>
-            {/* <NotesCard /> */}
+            <NotesCard />
           </div>
         </div>
       </div>

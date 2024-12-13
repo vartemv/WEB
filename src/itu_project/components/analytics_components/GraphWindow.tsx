@@ -9,22 +9,25 @@ type GraphWindowProps = {
   orders: Order[];
   onCreate: () => void;
   initialSettings?: ChartSetting;
+  onDelete: () => void;  // Add this
 };
 
 interface ChartSetting {
+  id: number;
   charttype: string;
   year: string;
   month: string;
   itemtype: string;
 }
 
-const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSettings }) => {
+const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSettings, onDelete }) => {
   const [showChartSelection, setShowChartSelection] = useState(false);
   const [chartType, setChartType] = useState(initialSettings?.charttype || 'Pie');
   const [year, setYear] = useState(initialSettings?.year || '2024');
   const [month, setMonth] = useState(initialSettings?.month || 'Current');
   const [itemType, setItemType] = useState(initialSettings?.itemtype || 'Orders state');
   const [showChart, setShowChart] = useState(!!initialSettings);
+  const [chartId, setChartId] = useState<number | undefined>(initialSettings?.id);
 
   useEffect(() => {
     if (initialSettings) {
@@ -63,7 +66,39 @@ const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSett
     if (!data.success) {
       console.error('Failed to save chart settings');
     } else {
+      // Store the new chart ID
+      setChartId(data.data.id);
       onCreate();
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!chartId) {
+      console.error('No chart ID found');
+      return;
+    }
+  
+    try {
+      const response = await fetch('/api/delete_chart_settings', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: chartId }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      if (data.success) {
+        onDelete(); // Call parent's delete handler instead of resetting local state
+      } else {
+        console.error('Failed to delete chart:', data.data);
+      }
+    } catch (error) {
+      console.error('Error deleting chart:', error);
     }
   };
 
@@ -73,6 +108,14 @@ const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSett
 
   return (
     <main className={styles.mainContainer}>
+       <button 
+        className={styles.deleteButton}
+        onClick={handleDelete}  // Simplify the onClick handler
+        title="Delete chart"
+        type="button"
+      >
+        ×
+      </button>
       {showChartSelection ? (
         <div>
           <div>
