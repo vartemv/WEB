@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../../styles/GraphWindow.module.css';
-import PieChartComponent from './PieChart';
+import PieChartComponent from './visualizations/PieChart';
+import BarChartComponent from './visualizations/BarChart';
 import { Order } from 'types';
+import { getChartConfig } from './charts/registry';
 
 type GraphWindowProps = {
   orders: Order[];
   onCreate: () => void;
-  initialSettings?: ChartSetting; // Add this prop
+  initialSettings?: ChartSetting;
 };
 
 interface ChartSetting {
-  id: number;
   charttype: string;
   year: string;
   month: string;
   itemtype: string;
 }
-
 
 const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSettings }) => {
   const [showChartSelection, setShowChartSelection] = useState(false);
@@ -24,7 +24,7 @@ const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSett
   const [year, setYear] = useState(initialSettings?.year || '2024');
   const [month, setMonth] = useState(initialSettings?.month || 'Current');
   const [itemType, setItemType] = useState(initialSettings?.itemtype || 'Orders state');
-  const [showPieChart, setShowPieChart] = useState(!!initialSettings);
+  const [showChart, setShowChart] = useState(!!initialSettings);
 
   useEffect(() => {
     if (initialSettings) {
@@ -32,7 +32,7 @@ const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSett
       setYear(initialSettings.year);
       setMonth(initialSettings.month);
       setItemType(initialSettings.itemtype);
-      setShowPieChart(true);
+      setShowChart(true);
       setShowChartSelection(false);
     }
   }, [initialSettings]);
@@ -41,12 +41,14 @@ const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSett
     setShowChartSelection(true);
   };
 
-  const handleOptionChange = (setter: React.Dispatch<React.SetStateAction<string>>) => (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleOptionChange = (setter: React.Dispatch<React.SetStateAction<string>>) => (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     setter(event.target.value);
   };
 
-  const handleCreatePieChart = async () => {
-    setShowPieChart(true);
+  const handleCreateChart = async () => {
+    setShowChart(true);
     setShowChartSelection(false);
 
     const response = await fetch('/api/save_chart_settings', {
@@ -65,6 +67,10 @@ const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSett
     }
   };
 
+  // Get allowed visualizations for the selected item type
+  const config = getChartConfig(itemType);
+  const allowedVisualizations = config?.allowedVisualizations || ['Pie'];
+
   return (
     <main className={styles.mainContainer}>
       {showChartSelection ? (
@@ -72,9 +78,12 @@ const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSett
           <div>
             <label>Chart Type:</label>
             <select value={chartType} onChange={handleOptionChange(setChartType)}>
-              <option value="Pie">Pie</option>
-              <option value="Bar">Bar</option>
-              <option value="Line">Line</option>
+              {allowedVisualizations.includes('Pie') && (
+                <option value="Pie">Pie</option>
+              )}
+              {allowedVisualizations.includes('Bar') && (
+                <option value="Bar">Bar</option>
+              )}
             </select>
           </div>
           <div>
@@ -105,18 +114,33 @@ const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSett
           </div>
           <div>
             <label>Item Type:</label>
-            <select value={itemType} onChange={handleOptionChange(setItemType)}>
+            <select 
+              value={itemType} 
+              onChange={(e) => {
+                const newType = e.target.value;
+                setItemType(newType);
+                const newConfig = getChartConfig(newType);
+                if (newConfig && !newConfig.allowedVisualizations.includes(chartType)) {
+                  setChartType(newConfig.allowedVisualizations[0]);
+                }
+              }}
+            >
               <option value="Orders state">Orders state</option>
               <option value="Product category">Product category</option>
               <option value="Customer type">Customer type</option>
             </select>
           </div>
-          <button onClick={handleCreatePieChart}>Create Pie Chart</button>
+          <button onClick={handleCreateChart}>Create Chart</button>
         </div>
       ) : (
-        !showPieChart && <a onClick={handleAddGraphClick}>Add chart</a>
+        !showChart && <a onClick={handleAddGraphClick}>Add chart</a>
       )}
-      {showPieChart && <PieChartComponent orders={orders} />}
+      {showChart && chartType === 'Pie' && (
+        <PieChartComponent orders={orders} itemType={itemType} />
+      )}
+      {showChart && chartType === 'Bar' && (
+        <BarChartComponent orders={orders} itemType={itemType} />
+      )}
     </main>
   );
 };
