@@ -1,6 +1,6 @@
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -18,4 +18,13 @@ model Order {
   order_date String @db.VarChar(13)
 
   @@map("orders")
+}
+
+model items {
+  id              Int    @id
+  name            String @db.VarChar(100)
+  category        String @db.VarChar(100)
+  price           Int
+  quantity        Int
+  min_stock_level Int
 }

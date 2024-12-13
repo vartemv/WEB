@@ -1,0 +1,24 @@
+.searchContainer {
+    display: flex;
+    align-items: center;
+    border-radius: 15px;
+    min-width: 240px;
+    min-height: 50px;
+    padding: 13px 10px;
+    font: 400 16px Poppins, sans-serif;
+    border: 1px solid #d9d9d9;
+  }
+  
+  .searchIcon {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+  }
+  
+  .searchInput {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #8f8f8f;
+  }

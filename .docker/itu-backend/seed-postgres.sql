@@ -8,6 +8,15 @@ CREATE TABLE IF NOT EXISTS orders (
   order_date VARCHAR(13) NOT NULL
  );
 
+CREATE TABLE IF NOT EXISTS items (
+  id INTEGER PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  category VARCHAR(100) NOT NULL,
+  price INTEGER NOT NULL,
+  quantity INTEGER NOT NULL,
+  min_stock_level INTEGER NOT NULL
+ );
+ 
 INSERT INTO orders (item, name, address, status, price, order_date) VALUES
 ('Wireless Mouse', 'John Doe', '123 Elm Street, Springfield, IL', 'Active', 25, '2024-11-10');
 

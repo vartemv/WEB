@@ -7,3 +7,12 @@ export interface Order {
     price: number;
     order_date: string;
 }
+
+// export interface Item {
+//     id: number;
+//     name: string;
+//     category: string;
+//     price: number;
+//     quantity: string;
+//     min_stock_level: string;
+// }
