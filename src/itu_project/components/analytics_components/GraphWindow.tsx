@@ -93,7 +93,7 @@ const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSett
   
       const data = await response.json();
       if (data.success) {
-        onDelete(); // Call parent's delete handler instead of resetting local state
+        onDelete(); // Call the parent's delete handler
       } else {
         console.error('Failed to delete chart:', data.data);
       }

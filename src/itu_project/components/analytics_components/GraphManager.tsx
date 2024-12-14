@@ -26,19 +26,19 @@ const GraphManager: React.FC<GraphWindowProps> = ({ orders }) => {
         const data = await response.json();
         if (data.success && data.data) {
           const settings = Array.isArray(data.data) ? data.data : [data.data];
-          // Add type annotation for setting parameter
-          const windows = settings.map((setting: ChartSetting, index) => 
-            [index, setting] as [number, ChartSetting]
-          );
-          windows.push([settings.length, undefined]); 
-          setGraphWindows(windows);
-          setNextId(settings.length + 1);
+          if (settings.length > 0) {
+            // Only replace initial window if we have saved settings
+            const windows = settings.map((setting: ChartSetting) => 
+              [setting.id, setting] as [number, ChartSetting]
+            );
+            setGraphWindows(windows);
+          }
         }
       } catch (error) {
         console.error('Failed to load chart settings:', error);
       }
     };
-
+  
     loadChartSettings();
   }, []);
 
