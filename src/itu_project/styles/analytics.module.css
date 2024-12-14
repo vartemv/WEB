@@ -332,3 +332,56 @@
   gap: 100px;
   box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.2);
 }
+
+.editButton, .saveButton {
+  background-color: #65558f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.editNoteInput {
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  margin-right: 8px;
+}
+
+.noteItem {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 8px;
+}
+
+.deleteButton {
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  background-color: #cc0000;
+}
+
+.cancelButton {
+  background-color: #cccccc;
+  color: black;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.cancelButton:hover {
+  background-color: #999999;
+}
