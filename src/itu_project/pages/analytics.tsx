@@ -7,11 +7,19 @@ import { Order } from 'types';
 import { getTotalOrders } from '@/lib/orderUtils';
 import StatisticItem from '../components/analytics_components/StatisticsItem';
 import GraphManager from '@/components/analytics_components/GraphManager';
+import { useState } from 'react';
+
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 const Analytics: FunctionComponent = () => {
   const { data, error, mutate } = useSWR('/api/get_order', fetcher);
+  const [selectedChartId, setSelectedChartId] = useState<number | undefined>();
+  const [notesKey, setNotesKey] = useState(0); // Add this state for forcing re-render
+
+  const handleNoteAdded = () => {
+    setNotesKey(prev => prev + 1); // Force NotesCard to re-fetch
+  };
 
   if (error) return <div>Failed to load orders</div>;
   if (!data) return <div>Loading...</div>;
@@ -42,10 +50,17 @@ const Analytics: FunctionComponent = () => {
                 <StatisticItem label="Total orders" value={getTotalOrders(orders)} />
               </div>
             </section>
-            <GraphManager orders={orders} />
+            <GraphManager 
+              orders={orders} 
+              onChartSelect={(chartId) => {
+                console.log('Selected chart:', chartId);
+                setSelectedChartId(chartId);
+              }} 
+              onNoteAdded={handleNoteAdded} // Make sure this is passed
+            />
           </div>
           <div className={styles.column}>
-            <NotesCard />
+          <NotesCard chartId={selectedChartId} key={notesKey}/>
           </div>
         </div>
       </div>

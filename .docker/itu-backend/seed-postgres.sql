@@ -26,6 +26,14 @@ CREATE TABLE IF NOT EXISTS chart_settings (
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Creation timestamp
 );
 
+CREATE TABLE IF NOT EXISTS chart_notes (
+  id Serial PRIMARY KEY,              
+  chart_id INTEGER NOT NULL,          
+  note TEXT NOT NULL,                 
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (chart_id) REFERENCES chart_settings(id) ON DELETE CASCADE
+);
+
 INSERT INTO orders (item, name, address, status, price, order_date) VALUES
 ('Wireless Mouse', 'John Doe', '123 Elm Street, Springfield, IL', 'Active', 25, '2024-11-10');
 

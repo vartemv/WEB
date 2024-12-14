@@ -5,12 +5,15 @@ import BarChartComponent from './visualizations/BarChart';
 import { Order } from 'types';
 import { getChartConfig } from './charts/registry';
 
-type GraphWindowProps = {
+interface GraphWindowProps {
   orders: Order[];
   onCreate: () => void;
   initialSettings?: ChartSetting;
-  onDelete: () => void;  // Add this
-};
+  onDelete: () => void;
+  onClick?: () => void;
+  onChartSelect?: (chartId: number) => void;
+  onNoteAdded?: () => void; // Add this prop
+}
 
 interface ChartSetting {
   id: number;
@@ -18,9 +21,10 @@ interface ChartSetting {
   year: string;
   month: string;
   itemtype: string;
+  note?: string;
 }
 
-const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSettings, onDelete }) => {
+const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSettings, onDelete, onClick, onNoteAdded, onChartSelect }) => {
   const [showChartSelection, setShowChartSelection] = useState(false);
   const [chartType, setChartType] = useState(initialSettings?.charttype || 'Pie');
   const [year, setYear] = useState(initialSettings?.year || '2024');
@@ -28,6 +32,43 @@ const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSett
   const [itemType, setItemType] = useState(initialSettings?.itemtype || 'Orders state');
   const [showChart, setShowChart] = useState(!!initialSettings);
   const [chartId, setChartId] = useState<number | undefined>(initialSettings?.id);
+  const [showNoteModal, setShowNoteModal] = useState(false);
+  const [note, setNote] = useState('');
+
+  const handleAddNote = async () => {
+    if (!chartId) {
+      console.error('No chart ID available');
+      return;
+    }
+  
+    try {
+      const response = await fetch('/api/save_note', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          chartId: chartId,
+          note: note 
+        }),
+      });
+  
+      const data = await response.json();
+      if (data.success) {
+        if (chartId) {
+          onClick?.();
+          onChartSelect?.(chartId);
+        }
+        onNoteAdded?.(); // Force notes refresh
+        setShowNoteModal(false);
+        setNote('');
+      } else {
+        console.error('Failed to save note:', data.data);
+      }
+    } catch (error) {
+      console.error('Error saving note:', error);
+    }
+  };
 
   useEffect(() => {
     if (initialSettings) {
@@ -51,24 +92,32 @@ const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSett
   };
 
   const handleCreateChart = async () => {
-    setShowChart(true);
-    setShowChartSelection(false);
-
-    const response = await fetch('/api/save_chart_settings', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ chartType, year, month, itemType }),
-    });
-
-    const data = await response.json();
-    if (!data.success) {
-      console.error('Failed to save chart settings');
-    } else {
-      // Store the new chart ID
-      setChartId(data.data.id);
-      onCreate();
+    try {
+      const response = await fetch('/api/save_chart_settings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ chartType, year, month, itemType }),
+      });
+  
+      const data = await response.json();
+      if (data.success) {
+        const newChartId = data.data.id;
+        // Store the new chart ID
+        setChartId(newChartId);
+        // Update chart display
+        setShowChart(true);
+        setShowChartSelection(false);
+        // Trigger parent handlers with the new chart ID
+        onCreate();
+        onClick?.(); // Add the chart ID to be selected in parent
+        console.log('Created chart with ID:', newChartId); // Debug log
+      } else {
+        console.error('Failed to save chart settings');
+      }
+    } catch (error) {
+      console.error('Error creating chart:', error);
     }
   };
 
@@ -107,7 +156,16 @@ const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSett
   const allowedVisualizations = config?.allowedVisualizations || ['Pie'];
 
   return (
-    <main className={styles.mainContainer}>
+    <main 
+      className={styles.mainContainer}       
+      onClick={(e) => {
+        e.preventDefault();
+        if (chartId) {
+          onClick?.();
+          onChartSelect?.(chartId);
+        }
+      }}
+    >
         {showChart && (
       <button 
         className={styles.deleteButton}
@@ -185,6 +243,26 @@ const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSett
       )}
       {showChart && chartType === 'Bar' && (
         <BarChartComponent orders={orders} itemType={itemType} />
+      )}
+      {showChart && (
+        <button 
+          className={styles.noteButton}
+          onClick={() => setShowNoteModal(true)}
+        >
+          Add Note
+        </button>
+      )}
+
+      {showNoteModal && (
+        <div className={styles.modal}>
+          <textarea
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="Enter your note"
+          />
+          <button onClick={handleAddNote}>Save Note</button>
+          <button onClick={() => setShowNoteModal(false)}>Cancel</button>
+        </div>
       )}
     </main>
   );

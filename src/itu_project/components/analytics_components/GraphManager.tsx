@@ -5,6 +5,8 @@ import styles from '../../styles/GraphWindow.module.css';
 
 type GraphWindowProps = {
   orders: Order[];
+  onChartSelect: (chartId: number | undefined) => void;
+  onNoteAdded: () => void;
 };
 
 interface ChartSetting {
@@ -15,9 +17,8 @@ interface ChartSetting {
   itemtype: string;
 }
 
-const GraphManager: React.FC<GraphWindowProps> = ({ orders }) => {
-  // Use a tuple of [id, chartSetting] to maintain unique IDs
-  const [graphWindows, setGraphWindows] = useState<[number, ChartSetting | undefined][]>([[0, undefined]]);
+const GraphManager: React.FC<GraphWindowProps> = ({ orders, onChartSelect, onNoteAdded }) => {
+  const [graphWindows, setGraphWindows] = useState<[number, ChartSetting | undefined][]>([]);
   const [nextId, setNextId] = useState(1);
 
   useEffect(() => {
@@ -27,20 +28,21 @@ const GraphManager: React.FC<GraphWindowProps> = ({ orders }) => {
         const data = await response.json();
         if (data.success && data.data) {
           const settings = Array.isArray(data.data) ? data.data : [data.data];
-          // Always include an undefined window for new chart creation
           const windows = [
             ...settings.map((setting: ChartSetting) => 
               [setting.id, setting] as [number, ChartSetting]
             ),
-            [nextId, undefined] // Add empty window for new chart
+            // Add empty window with a unique ID
+            [Math.max(...settings.map(s => s.id), 0) + 1, undefined]
           ];
           setGraphWindows(windows);
-          setNextId(prev => prev + settings.length + 1);
+          // Update nextId to be greater than all existing IDs
+          setNextId(Math.max(...windows.map(([id]) => id)) + 1);
         }
       } catch (error) {
         console.error('Failed to load chart settings:', error);
-        // If loading fails, at least show the new chart window
-        setGraphWindows([[0, undefined]]);
+        setGraphWindows([[1, undefined]]);
+        setNextId(2);
       }
     };
   
@@ -48,6 +50,7 @@ const GraphManager: React.FC<GraphWindowProps> = ({ orders }) => {
   }, []);
 
   const handleCreateNewGraphWindow = () => {
+    // Add new window with the next unique ID
     setGraphWindows(prev => [...prev, [nextId, undefined]]);
     setNextId(prev => prev + 1);
   };
@@ -60,11 +63,14 @@ const GraphManager: React.FC<GraphWindowProps> = ({ orders }) => {
     <div className={styles.graphGrid}>
       {graphWindows.map(([id, settings]) => (
         <GraphWindow 
-          key={id}
+          key={`graph-window-${id}`} // Ensure unique key
           orders={orders} 
           onCreate={handleCreateNewGraphWindow}
           initialSettings={settings}
           onDelete={() => handleDeleteWindow(id)}
+          onClick={() => onChartSelect(settings?.id)}
+          onChartSelect={onChartSelect}
+          onNoteAdded={onNoteAdded}
         />
       ))}
     </div>
