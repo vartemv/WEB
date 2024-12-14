@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import styles from '../styles/StockManagement.module.css';
+import styles from '../../../styles/StockManagement.module.css';
 import Modal from '@/components/AddItem';
-import SearchBar from '../components/SearchBar';
-import FilterDropdown from '../components/FilterDropdown';
-import NewStockButton from '../components/NewStockButton';
-import StockTable from '../components/StockTable';
+import SearchBar from '../../../components/SearchBar';
+import FilterDropdown from '../../../components/FilterDropdown';
+import NewStockButton from '../../../components/NewStockButton';
+import StockTable from '../../../components/StockTable';
 
 interface Item {
     id: number;
