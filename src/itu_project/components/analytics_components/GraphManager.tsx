@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import GraphWindow from './GraphWindow';
 import { Order } from 'types';
+import styles from '../../styles/GraphWindow.module.css';
 
 type GraphWindowProps = {
   orders: Order[];
@@ -52,7 +53,7 @@ const GraphManager: React.FC<GraphWindowProps> = ({ orders }) => {
   };
 
   return (
-    <div>
+    <div className={styles.graphGrid}>
       {graphWindows.map(([id, settings]) => (
         <GraphWindow 
           key={id}

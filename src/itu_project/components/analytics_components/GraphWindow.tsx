@@ -108,14 +108,16 @@ const GraphWindow: React.FC<GraphWindowProps> = ({ orders, onCreate, initialSett
 
   return (
     <main className={styles.mainContainer}>
-       <button 
+        {showChart && (
+      <button 
         className={styles.deleteButton}
-        onClick={handleDelete}  // Simplify the onClick handler
+        onClick={handleDelete}
         title="Delete chart"
         type="button"
       >
         ×
       </button>
+    )}
       {showChartSelection ? (
         <div>
           <div>
