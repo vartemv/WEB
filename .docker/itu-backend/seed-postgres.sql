@@ -35,5 +35,8 @@ INSERT INTO orders (item, name, address, status, price, order_date) VALUES
 INSERT INTO orders (item, name, address, status, price, order_date) VALUES
 ('Bluetooth Speaker', 'Alice Johnson', '789 Oak Blvd, Austin, TX', 'Shipped', 60, '2024-11-05');
 
--- INSERT INTO chart_settings (chartType, year, month, itemType) VALUES
--- ('Pie', '2024', 'Current', 'Orders state');
+INSERT INTO chart_settings (chartType, year, month, itemType) VALUES
+('Pie', '2024', 'Current', 'Orders state');
+
+INSERT INTO chart_settings (chartType, year, month, itemType) VALUES
+('Bar', '2024', 'Current', 'Orders state');

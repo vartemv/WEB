@@ -27,16 +27,20 @@ const GraphManager: React.FC<GraphWindowProps> = ({ orders }) => {
         const data = await response.json();
         if (data.success && data.data) {
           const settings = Array.isArray(data.data) ? data.data : [data.data];
-          if (settings.length > 0) {
-            // Only replace initial window if we have saved settings
-            const windows = settings.map((setting: ChartSetting) => 
+          // Always include an undefined window for new chart creation
+          const windows = [
+            ...settings.map((setting: ChartSetting) => 
               [setting.id, setting] as [number, ChartSetting]
-            );
-            setGraphWindows(windows);
-          }
+            ),
+            [nextId, undefined] // Add empty window for new chart
+          ];
+          setGraphWindows(windows);
+          setNextId(prev => prev + settings.length + 1);
         }
       } catch (error) {
         console.error('Failed to load chart settings:', error);
+        // If loading fails, at least show the new chart window
+        setGraphWindows([[0, undefined]]);
       }
     };
   
