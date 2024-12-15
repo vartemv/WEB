@@ -42,13 +42,13 @@ CREATE TABLE IF NOT EXISTS chart_notes (
 );
 
 INSERT INTO orders (item, name, address, status, price, order_date) VALUES
-('Wireless Mouse', 'John Doe', '123 Elm Street, Springfield, IL', 'Active', 25, '2024-11-10');
+('Wireless Mouse', 'John Doe', '123 Elm Street, Springfield, IL', 'Active', 25, '2024/11/10');
 
 INSERT INTO orders (item, name, address, status, price, order_date) VALUES
-('Laptop Stand', 'Jane Smith', '456 Maple Avenue, Denver, CO', 'Active', 45, '2024-11-08');
+('Laptop Stand', 'Jane Smith', '456 Maple Avenue, Denver, CO', 'Active', 45, '2024/11/08');
 
 INSERT INTO orders (item, name, address, status, price, order_date) VALUES
-('Bluetooth Speaker', 'Alice Johnson', '789 Oak Blvd, Austin, TX', 'Shipped', 60, '2024-11-05');
+('Bluetooth Speaker', 'Alice Johnson', '789 Oak Blvd, Austin, TX', 'Shipped', 60, '2024/11/05');
 
 INSERT INTO devices (name, photo) VALUES
 ('3d printer', '/printer_test.jpg');
