@@ -7,6 +7,7 @@ import NewStockButton from '../../../components/NewStockButton';
 import StockTable from '../../../components/StockTable';
 import StockTableMod from '../../../components/StockTableMod';
 import ProductFormModal from '../../../components/ProductAddForm';
+import ProductEditFormModal from '../../../components/ProductEditForm';
 
 interface Item {
     id: number;
@@ -31,6 +32,18 @@ const StockManagement: React.FC = () => {
     quantity: 0,
     min_stock_level: 0,
   });
+
+  const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    id: 0,
+    name: '',
+    category: '',
+    price: 0,
+    quantity: 0,
+    min_stock_level: 0,
+  });
+
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const fetchStockItems = async () => {
@@ -64,6 +77,11 @@ const StockManagement: React.FC = () => {
     setStockItems((stockItems) => stockItems.filter((item) => item.id !== itemId));
   };
 
+  const handleEditItem = (item: any) => {
+    setEditFormData(item);
+    setIsEditSheetOpen(true);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();    
     
@@ -90,7 +108,7 @@ const StockManagement: React.FC = () => {
         });
         setIsSheetOpen(false);
       }else {
-        setErrorMessage(data.message || 'Failed to create item');
+        setErrorMessage('Failed to create item');
         return;
       }
 
@@ -100,10 +118,38 @@ const StockManagement: React.FC = () => {
     }
     };
 
+    const handleEditSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+    
+      try {
+        const updateItemResponse = await fetch('/api/update_item', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ...editFormData }),
+        });
+    
+        const data = await updateItemResponse.json();
+        if (data.success) {
+          console.log('Item updated successfully');
+          fetchStockItems();
+          setErrorMessage(null);
+          setIsEditSheetOpen(false);
+        } else {
+          setErrorMessage('Failed to update item');
+          return;
+        }
+      } catch (error) {
+        console.error('Error updating item:', error);
+        setErrorMessage('An error occurred while updating the item');
+      }
+    };
+
   return (<>
   
     <main className={`bg-gray-100 flex flex-col overflow-hidden transition-all duration-300 ${
-    isSheetOpen ? 'mr-80' : 'mr-0' }`}>
+    isSheetOpen || isEditSheetOpen ? 'mr-80' : 'mr-0' }`}>
       <div className="bg-white flex flex-col w-full justify-start p-3 pb-[386px]">
         <h1 className={styles.pageTitle}>Stock: {category}</h1>
         <div className="border-t border-gray-300 my-2"></div>
@@ -136,6 +182,14 @@ const StockManagement: React.FC = () => {
           setIsSheetOpen={setIsSheetOpen}
           handleSubmit={handleSubmit}
         />
+        <ProductEditFormModal
+        formData={editFormData}
+        setFormData={setEditFormData}
+        isSheetOpen={isEditSheetOpen}
+        setIsSheetOpen={setIsEditSheetOpen}
+        handleSubmit={handleEditSubmit}
+      />
+        
         </section>
         
         {/* <StockTable items={stockItems} /> */}
@@ -144,7 +198,7 @@ const StockManagement: React.FC = () => {
         {errorMessage}
       </div>
       )}
-        <StockTableMod items={filteredItems} onDelete={handleDeleteItem} />
+        <StockTableMod items={filteredItems} onDelete={handleDeleteItem} onEdit={handleEditItem}/>
       </div>
     </main>
     </>

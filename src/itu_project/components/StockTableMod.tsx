@@ -19,11 +19,10 @@ interface StockItem {
 interface StockTableProps {
   items: StockItem[];
   onDelete: (itemId: number) => void;
+  onEdit: (item: StockItem) => void;
 }
 
-const StockTableMod: React.FC<StockTableProps> = ({ items, onDelete }) => {
-
-  const [selectedItem, setSelectedItem] = useState<StockItem | null>(null);
+const StockTableMod: React.FC<StockTableProps> = ({ items, onDelete, onEdit }) => {
 
   const getAvailabilityClass = (item: StockItem) => {
     if (item.quantity == 0) {
@@ -68,7 +67,7 @@ const StockTableMod: React.FC<StockTableProps> = ({ items, onDelete }) => {
     }
 };
 
-  return (
+  return (<>
     <Table>
       <TableCaption>A list of your items.</TableCaption>
       <TableHeader>
@@ -103,7 +102,7 @@ const StockTableMod: React.FC<StockTableProps> = ({ items, onDelete }) => {
               <DropdownMenuContent className="transform translate-x-[-20px]">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onEdit(item)}>Edit</DropdownMenuItem>
                 <DialogTrigger asChild>
                   <DropdownMenuItem>Delete</DropdownMenuItem>
                 </DialogTrigger>
@@ -123,7 +122,6 @@ const StockTableMod: React.FC<StockTableProps> = ({ items, onDelete }) => {
                   </Button>
                 </DialogClose>
                 <Button type="submit" variant="destructive" onClick={()=> handleDelete(item.id)} >Delete</Button>
-                {/* <TableCell><Button onClick={()=> handleDelete(user.id)}variant="destructive">Delete</Button></TableCell> */}
                 </DialogFooter>
             </DialogContent>
             </Dialog>
@@ -133,6 +131,7 @@ const StockTableMod: React.FC<StockTableProps> = ({ items, onDelete }) => {
         ))}
       </TableBody>
     </Table>
+  </>
   );
 };
 
