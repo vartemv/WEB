@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Link from 'next/link';
 import styles from '../../styles/StockManagement.module.css';
-import CategoryGrid from "../../components/categoryGrid";
+import CategoryGrid from "../../components/CategoryGrid";
 
 const StockManagement: React.FC = () => {
 
@@ -11,7 +11,6 @@ const StockManagement: React.FC = () => {
       const response = await fetch('/api/get_categories');
       // if (!response.ok) throw new Error("Failed to fetch categories");
       const result = await response.json();
-      console.log(result);
       if (result.success) {
         setCategories(result.data);
       }

@@ -8,15 +8,21 @@ type Data = {
  
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
 	try {
-		const products = await prisma.items.findMany(
-			{
-				orderBy: [
-					{
-						id: 'asc',
-					}
-				]
-			}
-		);
+		const { category } = req.query;
+
+		console.log("Category: " + category);
+
+		let products;
+		if (category && category !== 'All') {
+			products = await prisma.items.findMany({
+				where: { category: category as string },
+				orderBy: { id: 'asc' },
+			});
+		} else {
+			products = await prisma.items.findMany({
+				orderBy: { id: 'asc' },
+			});
+		}
 		res.status(200).json({ success: true, data: products });
 	} catch (error) {
         console.log(error);
