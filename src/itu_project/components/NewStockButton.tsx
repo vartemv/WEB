@@ -1,14 +1,15 @@
 import React from 'react';
 import styles from '../styles/NewStockButton.module.css';
+import { PackagePlus } from 'lucide-react';
 
 interface NewStockButtonProps {
-  onClick: () => void;  // Callback function passed from the parent to trigger opening the modal
+  onClick: () => void;
 }
 
 const NewStockButton: React.FC<NewStockButtonProps> = ({ onClick }) => {
   return (
     <button className={styles.newStockButton} onClick={onClick}>
-      <img src="New_stock.png" alt="" className={styles.buttonIcon} />
+      <PackagePlus className={styles.buttonIcon} />
       New Stock
     </button>
   );
