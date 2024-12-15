@@ -23,3 +23,28 @@ export interface Device {
 //     quantity: string;
 //     min_stock_level: string;
 // }
+
+export interface Note {
+    id: number;
+    note: string;
+    chartId: number;
+}
+
+export interface ChartSetting {
+    id: number;
+    charttype: string;
+    year: string;
+    month: string;
+    itemtype: string;
+    note?: string;
+  }
+  
+  export interface GraphWindowProps {
+    orders: Order[];
+    onCreate: () => void;
+    initialSettings?: ChartSetting;
+    onDelete: () => void;
+    onClick?: () => void;
+    onChartSelect?: (chartId: number) => void;
+    onNoteAdded?: () => void;
+  }

@@ -56,7 +56,7 @@ const Analytics: FunctionComponent = () => {
                 console.log('Selected chart:', chartId);
                 setSelectedChartId(chartId);
               }} 
-              onNoteAdded={handleNoteAdded} // Make sure this is passed
+              onNoteAdded={handleNoteAdded} 
             />
           </div>
           <div className={styles.column}>

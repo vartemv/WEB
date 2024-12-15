@@ -1,116 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../../styles/analytics.module.css';
-
-interface Note {
-  id: number;
-  note: string;
-  created_at: string;
-  chart_id: number;
-}
+import { useNotes } from "../../hooks/useNotes";
 
 interface NotesCardProps {
   chartId?: number;
 }
 
 const NotesCard: React.FC<NotesCardProps> = ({ chartId }) => {
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedNotes, setEditedNotes] = useState<{[key: number]: string}>({});
-
-  const fetchNotes = async (id: number) => {
-    try {
-      const res = await fetch(`/api/get_notes?chartId=${id}`);
-      const data = await res.json();
-      if (data.success) {
-        setNotes(data.data);
-      }
-    } catch (error) {
-      console.error('Error fetching notes:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (chartId) {
-      fetchNotes(chartId);
-    } else {
-      setNotes([]);
-    }
-  }, [chartId]);
-
-  const handleEditClick = () => {
-    setIsEditing(true);
-    const initialEditState = notes.reduce((acc, note) => {
-      acc[note.id] = note.note;
-      return acc;
-    }, {} as {[key: number]: string});
-    setEditedNotes(initialEditState);
-  };
-
-  const handleSaveEdits = async () => {
-    try {
-      const updatePromises = Object.entries(editedNotes).map(([noteId, noteText]) => {
-        // If the note text is empty, delete the note
-        if (!noteText.trim()) {
-          return fetch('/api/delete_note', {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              noteId: parseInt(noteId)
-            }),
-          });
-        }
-        // Otherwise update the note
-        return fetch('/api/update_note', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            noteId: parseInt(noteId),
-            note: noteText,
-          }),
-        });
-      });
-  
-      await Promise.all(updatePromises);
-      setIsEditing(false);
-      if (chartId) {
-        fetchNotes(chartId);
-      }
-    } catch (error) {
-      console.error('Error updating notes:', error);
-    }
-  };
-
-  const handleNoteChange = (noteId: number, value: string) => {
-    setEditedNotes(prev => ({
-      ...prev,
-      [noteId]: value 
-    }));
-  };
-
-  const handleDeleteAllNotes = async () => {
-    try {
-      const deletePromises = notes.map((note) => {
-        return fetch('/api/delete_note', {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            noteId: note.id
-          }),
-        });
-      });
-  
-      await Promise.all(deletePromises);
-      setNotes([]);
-    } catch (error) {
-      console.error('Error deleting notes:', error);
-    }
-  };
+  const {
+    notes,
+    isEditing,
+    editedNotes,
+    handleEditClick,
+    handleSaveEdits,
+    handleDeleteAll,
+    handleNoteChange,
+    setIsEditing,
+    setEditedNotes
+  } = useNotes(chartId);
 
   return (
     <section className={styles.notesCard}>
@@ -127,7 +34,7 @@ const NotesCard: React.FC<NotesCardProps> = ({ chartId }) => {
               </button>
               {notes.length > 0 && (
                 <button 
-                  onClick={handleDeleteAllNotes}
+                  onClick={handleDeleteAll}
                   className={styles.deleteButton}
                 >
                   Delete All
