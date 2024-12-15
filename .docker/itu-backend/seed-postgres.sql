@@ -24,6 +24,23 @@ CREATE TABLE IF NOT EXISTS devices (
   photo TEXT
 );
 
+CREATE TABLE IF NOT EXISTS chart_settings (
+  id Serial PRIMARY KEY,              -- Auto-incrementing ID
+  chartType VARCHAR(50) NOT NULL,     -- Chart type
+  year VARCHAR(4) NOT NULL,           -- Year
+  month VARCHAR(20) NOT NULL,         -- Month
+  itemType VARCHAR(50) NOT NULL,      -- Item type
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Creation timestamp
+);
+
+CREATE TABLE IF NOT EXISTS chart_notes (
+  id Serial PRIMARY KEY,              
+  chart_id INTEGER NOT NULL,          
+  note TEXT NOT NULL,                 
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (chart_id) REFERENCES chart_settings(id) ON DELETE CASCADE
+);
+
 INSERT INTO orders (item, name, address, status, price, order_date) VALUES
 ('Wireless Mouse', 'John Doe', '123 Elm Street, Springfield, IL', 'Active', 25, '2024-11-10');
 
