@@ -167,13 +167,13 @@ export function useGraphWindow(
         setError('No orders available');
         return;
       }
-      // Check if data exists before creating chart
+      
       const config = getChartConfig(itemType);
       try {
         config?.getData(orders, year, month);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'No data available');
-        return; // Stop chart creation
+        return; 
       }
 
       const response = await fetch('/api/save_chart_settings', {
@@ -184,7 +184,7 @@ export function useGraphWindow(
 
       const data = await response.json();
       if (data.success) {
-        setError(null); // Clear any previous errors
+        setError(null); 
         setChartId(data.data.id);
         setShowChart(true);
         setShowChartSelection(false);

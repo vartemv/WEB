@@ -22,7 +22,7 @@ export function useNotes(chartId?: number) {
     if (chartId) {
       fetchChartDetails(chartId);
     }
-  }, [chartId]); // Only recreate when chartId changes
+  }, [chartId]); 
 
   const fetchChartDetails = useCallback(async (id: number) => {
     try {

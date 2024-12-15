@@ -74,7 +74,7 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
   const config = getChartConfig(itemType);
   const allowedVisualizations = config?.allowedVisualizations || ['Pie'];
 
-   // Add this handler
+   
    const handleEditClick = () => {
     setIsEditing(true);
     setShowChartSelection(true);

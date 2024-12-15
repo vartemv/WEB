@@ -16,7 +16,7 @@ export const orderStateChart = {
     const filteredOrders = orders.filter(order => {
       const [orderYear, orderMonth] = order.order_date.split('/');
       
-      // Convert month number to name for comparison
+      
       const monthNames = [
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
@@ -27,7 +27,7 @@ export const orderStateChart = {
         return orderYear === currentYear && parseInt(orderMonth) === currentMonth;
       }
 
-      // For specific month/year selection
+      
       const isYearMatch = orderYear === year;
       const isMonthMatch = month === orderMonthName;
       

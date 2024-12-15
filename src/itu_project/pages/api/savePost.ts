@@ -7,7 +7,7 @@ import formidable from 'formidable';
 
 export const config = {
   api: {
-    bodyParser: false, // Disable Next.js default body parser
+    bodyParser: false, 
   },
 };
 

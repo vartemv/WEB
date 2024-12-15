@@ -9,7 +9,7 @@ export const itemStatsChart: ChartConfig = {
       throw new Error('No orders available');
     }
 
-    // Get current date info
+
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear().toString();
     const currentMonth = currentDate.getMonth() + 1;
@@ -41,6 +41,6 @@ export const itemStatsChart: ChartConfig = {
     return Array.from(itemStats.entries())
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value)
-      .slice(0, 5); // Show top 5 items
+      .slice(0, 5); 
   }
 };

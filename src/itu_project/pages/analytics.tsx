@@ -15,10 +15,10 @@ const fetcher = (url: string) => fetch(url).then(res => res.json());
 const Analytics: FunctionComponent = () => {
   const { data, error, mutate } = useSWR('/api/get_order', fetcher);
   const [selectedChartId, setSelectedChartId] = useState<number | undefined>();
-  const [notesKey, setNotesKey] = useState(0); // Add this state for forcing re-render
+  const [notesKey, setNotesKey] = useState(0); 
 
   const handleNoteAdded = () => {
-    setNotesKey(prev => prev + 1); // Force NotesCard to re-fetch
+    setNotesKey(prev => prev + 1); 
   };
 
   if (error) return <div>Failed to load orders</div>;
