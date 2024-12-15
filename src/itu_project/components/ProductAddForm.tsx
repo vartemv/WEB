@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { useFormData } from "../contexts/FormDataContext";
 
 interface ProductFormModalProps {
   formData: {
@@ -31,6 +32,8 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
   setIsSheetOpen,
   handleSubmit,
 }) => {
+  const { deselectAllItems } = useFormData();
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
@@ -110,6 +113,7 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
                     quantity: 0,
                     min_stock_level: 0,
                   });
+                  deselectAllItems();
                   setIsSheetOpen(false);
                 }}
               >

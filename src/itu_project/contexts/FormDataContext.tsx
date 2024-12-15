@@ -11,6 +11,12 @@ interface FormData {
 interface FormDataContextType {
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  selectedItems: Set<number>;
+  setSelectedItems: React.Dispatch<React.SetStateAction<Set<number>>>;
+  toggleItemSelection: (itemId: number) => void;
+  deselectAllItems: () => void;
+  isSheetOpen: boolean;
+  setIsSheetOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const FormDataContext = createContext<FormDataContextType | undefined>(undefined);
@@ -28,6 +34,7 @@ interface FormDataProviderProps {
 }
 
 export const FormDataProvider: React.FC<FormDataProviderProps> = ({ children }) => {
+  const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
     name: '',
     category: '',
@@ -36,8 +43,36 @@ export const FormDataProvider: React.FC<FormDataProviderProps> = ({ children }) 
     min_stock_level: 0,
   });
 
+  const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
+
+  const toggleItemSelection = (itemId: number) => {
+    const newSelectedItems = new Set(selectedItems);
+    if (newSelectedItems.has(itemId)) {
+      newSelectedItems.delete(itemId);
+    } else {
+      newSelectedItems.add(itemId);
+    }
+    setSelectedItems(newSelectedItems);
+  };
+
+  // Deselect all items
+  const deselectAllItems = () => {
+    setSelectedItems(new Set());
+  };
+
   return (
-    <FormDataContext.Provider value={{ formData, setFormData }}>
+    <FormDataContext.Provider
+      value={{
+        formData,
+        setFormData,
+        selectedItems,
+        setSelectedItems,
+        toggleItemSelection,
+        deselectAllItems,
+        isSheetOpen,
+        setIsSheetOpen,
+      }}
+    >
       {children}
     </FormDataContext.Provider>
   );

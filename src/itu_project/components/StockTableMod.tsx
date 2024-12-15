@@ -5,6 +5,8 @@ import { EllipsisVertical, CirclePlus, CircleMinus } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger} from "@/components/ui/dropdown-menu"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { Checkbox } from '@/components/ui/checkbox';
+import { useFormData } from "../contexts/FormDataContext";
 
 
 interface StockItem {
@@ -23,6 +25,7 @@ interface StockTableProps {
 }
 
 const StockTableMod: React.FC<StockTableProps> = ({ items, onDelete, onEdit }) => {
+  const { selectedItems, setSelectedItems, toggleItemSelection, isSheetOpen } = useFormData();
   const [stockItems, setStockItems] = useState<StockItem[]>(items);
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
 
@@ -94,6 +97,14 @@ const StockTableMod: React.FC<StockTableProps> = ({ items, onDelete, onEdit }) =
     }
 };
 
+const handleSelectAllChange = () => {
+  if (selectedItems.size === stockItems.length) {
+    setSelectedItems(new Set()); // Deselect all
+  } else {
+    setSelectedItems(new Set(stockItems.map(item => item.id))); // Select all
+  }
+};
+
   useEffect(() => {
     setStockItems(items);
   }, [items]);
@@ -103,6 +114,15 @@ const StockTableMod: React.FC<StockTableProps> = ({ items, onDelete, onEdit }) =
       <TableCaption>A list of your items.</TableCaption>
       <TableHeader>
         <TableRow>
+          {isSheetOpen && (
+            <TableHead>
+              <input
+                type="checkbox"
+                checked={selectedItems.size === items.length}
+                onChange={handleSelectAllChange}
+              />
+            </TableHead>
+          )}
           <TableHead className="w-[100px]">ID</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Quantity</TableHead>
@@ -117,8 +137,17 @@ const StockTableMod: React.FC<StockTableProps> = ({ items, onDelete, onEdit }) =
           <TableRow key={item.id}
             onMouseEnter={() => setHoveredRow(item.id)}
             onMouseLeave={() => setHoveredRow(null)}
-            className="relative hover:bg-gray-100 transition"
-            >
+            className="relative hover:bg-gray-100 transition">
+            {isSheetOpen && (
+              <TableCell>
+                <input
+                  type="checkbox"
+                  checked={selectedItems.has(item.id)}
+                  onChange={() => toggleItemSelection(item.id)} // Toggle item selection
+                />
+              </TableCell>
+            )}
+
             <TableCell className="font-medium">{item.id}</TableCell>
             <TableCell>{item.name}</TableCell>
             {/* <TableCell>{item.quantity}</TableCell> */}
@@ -136,7 +165,7 @@ const StockTableMod: React.FC<StockTableProps> = ({ items, onDelete, onEdit }) =
                   />
                 </span>
               ) : (
-                <span className="ml-6">{item.quantity}</span>
+                <span className="ml-7">{item.quantity}</span>
               )}
             </TableCell>
             <TableCell>{item.category}</TableCell>

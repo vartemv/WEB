@@ -25,8 +25,7 @@ const StockManagement: React.FC = () => {
   const [stockItems, setStockItems] = useState<Item[]>([]);
   const [availabilityFilter, SetAvailabilityFilter] = useState<"none" | "in_stock" | "low_stock" | "out_of_stock">("none");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const { formData, setFormData } = useFormData();
+  const { formData, setFormData, isSheetOpen, setIsSheetOpen, deselectAllItems} = useFormData();
 
   const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
   const [editFormData, setEditFormData] = useState({
@@ -99,6 +98,7 @@ const StockManagement: React.FC = () => {
           quantity: 0,
           min_stock_level: 0,
         });
+        deselectAllItems();
         setIsSheetOpen(false);
       }else {
         setErrorMessage('Failed to create item');
