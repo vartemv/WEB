@@ -4,7 +4,6 @@ import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue,} from "@/comp
 import styles from '../../../styles/StockManagement.module.css';
 import SearchBar from '../../../components/SearchBar';
 import NewStockButton from '../../../components/NewStockButton';
-import StockTable from '../../../components/StockTable';
 import StockTableMod from '../../../components/StockTableMod';
 import ProductFormModal from '../../../components/ProductAddForm';
 import ProductEditFormModal from '../../../components/ProductEditForm';
@@ -187,7 +186,6 @@ const StockManagement: React.FC = () => {
         
         </section>
         
-        {/* <StockTable items={stockItems} /> */}
         {errorMessage && (
       <div className="text-red-500 text-sm mb-4 text-center w-full">
         {errorMessage}
