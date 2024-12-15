@@ -1,13 +1,13 @@
 import { ChartConfig } from './types';
-import { orderStateChart, customerTypeChart, itemStatsChart } from './implementations';
+import { orderStateChart, customerTypeChart, itemStatsChart, dailyOrdersChart } from './implementations';
 
 const charts: Record<string, ChartConfig> = {
   'Orders state': orderStateChart,
-  'Customer type': customerTypeChart,
   'Item Statistics': {
     ...itemStatsChart,
     allowedVisualizations: ['Pie']
-  }
+  },
+  'Daily Orders': dailyOrdersChart
 };
 
 

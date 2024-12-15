@@ -2,6 +2,7 @@ import React from 'react';
 import styles from '../../styles/GraphWindow.module.css';
 import PieChartComponent from './visualizations/PieChart';
 import BarChartComponent from './visualizations/BarChart';
+import LineChartComponent from './visualizations/LineChart';
 import { ChartSetting, Order } from 'types';
 import { getChartConfig } from './charts/registry';
 import { useGraphWindow } from '../../hooks/useGraphWindow';
@@ -127,6 +128,9 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
             {allowedVisualizations.includes('Bar') && (
               <option value="Bar">Bar</option>
             )}
+             {allowedVisualizations.includes('Line') && (
+              <option value="Line">Line</option>
+            )}
           </select>
         </div>
         <div>
@@ -170,7 +174,7 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
           >
             <option value="Orders state">Orders state</option>
             <option value="Item Statistics">Item Statistics</option>
-            {/* <option value="Customer type">Customer type</option> */}
+            <option value="Daily Orders">Daily Orders</option>
           </select>
         </div>
         <div className={styles.buttonGroup}>
@@ -202,6 +206,15 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
 
           {chartType === 'Pie' && (
             <PieChartComponent 
+              orders={orders} 
+              itemType={itemType}
+              year={year}
+              month={month}
+            />
+          )}
+
+          {chartType === 'Line' && (
+            <LineChartComponent 
               orders={orders} 
               itemType={itemType}
               year={year}
