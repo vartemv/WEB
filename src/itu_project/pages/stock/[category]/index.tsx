@@ -25,7 +25,7 @@ const StockManagement: React.FC = () => {
   const [stockItems, setStockItems] = useState<Item[]>([]);
   const [availabilityFilter, SetAvailabilityFilter] = useState<"none" | "in_stock" | "low_stock" | "out_of_stock">("none");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const { formData, setFormData, isSheetOpen, setIsSheetOpen, deselectAllItems} = useFormData();
+  const { formData, setFormData, isSheetOpen, setIsSheetOpen, deselectAllItems, selectedItems} = useFormData();
 
   const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
   const [editFormData, setEditFormData] = useState({
@@ -83,7 +83,10 @@ const StockManagement: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({...formData}),
+        body: JSON.stringify({
+          ...formData,
+          selectedItems: Array.from(selectedItems),
+        }),
       });
       
       const data = await createItemResponse.json();
