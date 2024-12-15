@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Link from 'next/link';
 import styles from '../../styles/StockManagement.module.css';
 import CategoryGrid from "../../components/CategoryGrid";
+import { FormDataProvider , useFormData } from "../../contexts/FormDataContext";
 
 const StockManagement: React.FC = () => {
 
@@ -39,20 +40,6 @@ const StockManagement: React.FC = () => {
           </div>
         <div className="border-t border-gray-300 my-2"></div>
         <CategoryGrid categories={categories}/>
-        {/* <section className={styles.filterSection}>
-          <div className={styles.filterGroup}>
-            <SearchBar />
-            <FilterDropdown label="Select Availability"
-            options={["In stock", "Low stock", "Out of stock"]}
-            onSelect={handleFilterSelect} />
-            <FilterDropdown label="Select Category" />
-            <FilterDropdown label="Filters" />
-          </div>
-          <NewStockButton onClick={openModal} />
-        </section> */}
-
-        {/* <Modal isOpen={isModalOpen} onClose={closeModal} onSubmit={handleAddItem} /> */}
-        {/* <StockTable items={stockItems} /> */}
       </div>
     </main>
     </>

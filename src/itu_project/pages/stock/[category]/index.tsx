@@ -8,6 +8,7 @@ import StockTable from '../../../components/StockTable';
 import StockTableMod from '../../../components/StockTableMod';
 import ProductFormModal from '../../../components/ProductAddForm';
 import ProductEditFormModal from '../../../components/ProductEditForm';
+import { useFormData } from "../../../contexts/FormDataContext";
 
 interface Item {
     id: number;
@@ -25,13 +26,7 @@ const StockManagement: React.FC = () => {
   const [availabilityFilter, SetAvailabilityFilter] = useState<"none" | "in_stock" | "low_stock" | "out_of_stock">("none");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    category: '',
-    price: 0,
-    quantity: 0,
-    min_stock_level: 0,
-  });
+  const { formData, setFormData } = useFormData();
 
   const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
   const [editFormData, setEditFormData] = useState({
@@ -42,8 +37,6 @@ const StockManagement: React.FC = () => {
     quantity: 0,
     min_stock_level: 0,
   });
-
-
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const fetchStockItems = async () => {
@@ -147,7 +140,6 @@ const StockManagement: React.FC = () => {
     };
 
   return (<>
-  
     <main className={`bg-gray-100 flex flex-col overflow-hidden transition-all duration-300 ${
     isSheetOpen || isEditSheetOpen ? 'mr-80' : 'mr-0' }`}>
       <div className="bg-white flex flex-col w-full justify-start p-3 pb-[386px]">
