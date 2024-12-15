@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { Order, Device } from "types"; // Replace with actual type definition
+import { useDevice } from "./useDevice";
 
 const get_from_db = async (api: string) => {
     const response = await fetch(api);
@@ -12,7 +13,6 @@ const get_from_db = async (api: string) => {
 export const useDesktopLogic = () => {
     const router = useRouter();
     const [orders, setOrders] = useState<Order[]>([]);
-    const [devices, setDevices] = useState<Device[]>([]);
     const [isDetailsOpen, setDetailsOpen] = useState(false);
     const [isDeviceDetailsOpen, setDeviceDetailsOpen] = useState(false);
     const [isCreateOrderOpen, setCreateOrderOpen] = useState(false);
@@ -25,14 +25,8 @@ export const useDesktopLogic = () => {
         setOrders(order);
     };
 
-    const refreshDevices = async () => {
-        const dev = await get_from_db("/api/get_devices");
-        setDevices(dev);
-    };
-
     useEffect(() => {
         refreshOrder();
-        refreshDevices();
     }, []);
 
     const filteredOrders = useMemo(() => {
@@ -83,9 +77,9 @@ export const useDesktopLogic = () => {
     const navigateToAnalytics = () => {
         router.push("/analytics");
     };
+    
 
     return {
-        devices,
         orders,
         filteredOrders,
         isDetailsOpen,

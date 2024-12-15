@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect } from "react";
 import { useDesktopLogic } from "../hooks/useDesktopLogic";
 import { Dashboard } from "@/components/desktop_components/dashboard";
 import { OrdersGrid } from "@/components/desktop_components/ordersGrid";
@@ -10,13 +10,12 @@ import  Details  from "../components/Details";
 import  CreateOrder  from "../components/CreateOrder";
 import DeviceDetails from "../components/deviceDetails";
 import styles from "../styles/Desktop.module.css";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndContext } from "@dnd-kit/core";
+import { DevicesProvider, useDevices } from "@/contexts/DeviceContext";
 
-const Desktop: FunctionComponent = () => {
+const DesktopContent: FunctionComponent = () => {
     const {
         orders,
-        devices,
         filteredOrders,
         isDetailsOpen,
         isCreateOrderOpen,
@@ -33,20 +32,23 @@ const Desktop: FunctionComponent = () => {
         handleFilterClick,
         navigateToAnalytics,
         openDeviceDetails,
-        closeDeviceDetails
+        closeDeviceDetails,
     } = useDesktopLogic();
 
+    const {handleDragEnd, refreshDevices} = useDevices();
+
+    useEffect(()=>{
+        refreshDevices();
+    },[]);
+
     return (
-        
+        <DndContext onDragEnd={handleDragEnd}>
         <div className={styles.desktop1}>
-            <DndProvider backend={HTML5Backend}>
             <Dashboard navigateToAnalytics={navigateToAnalytics} />
             <OrdersGrid orders={filteredOrders} onOrderClick={openDetails} />
             <Filters activeFilter={activeFilter} onFilterClick={handleFilterClick} />
             <AddOrderButton onClick={openCreateOrder} />
-            <Devices orders={orders} devices={devices} onDeviceClick={openDeviceDetails}/>
-            
-
+            <Devices orders={orders} onDeviceClick={openDeviceDetails} onDeviceAdd={refreshDevices}/>
             {isDetailsOpen && selectedOrder && (
                 <PortalPopup
                     overlayColor="rgba(113, 113, 113, 0.3)"
@@ -73,9 +75,17 @@ const Desktop: FunctionComponent = () => {
                     <CreateOrder onCreation={handleOrderCreated} />
                 </PortalPopup>
             )}
-            </DndProvider>
         </div>
+        </DndContext>
     );
 };
+
+const Desktop: FunctionComponent = () => {
+    return (
+        <DevicesProvider>
+            <DesktopContent/>
+        </DevicesProvider>
+    )
+} 
 
 export default Desktop;
