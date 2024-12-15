@@ -72,25 +72,19 @@
 }
 
 .cardHeader {
-  align-self: flex-end;
   display: flex;
-  width: 482px;
-  max-width: 100%;
+  width: 100%; /* Change from 482px to 100% */
+  padding: 0 20px; /* Add padding instead of using width */
+  align-self: flex-start; /* Change from flex-end to flex-start */
   gap: 20px;
   flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-@media (max-width: 991px) {
-  .cardHeader {
-    margin-right: 10px;
-  }
 }
 
 .cardTitle {
   color: #000;
-  text-align: center;
+  text-align: left;
   font: 400 20px Roboto, sans-serif;
+  margin-left: 38px; /* Ensure no left margin */
 }
 
 .defaultTag {

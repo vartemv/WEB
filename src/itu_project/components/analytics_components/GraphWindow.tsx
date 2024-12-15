@@ -120,7 +120,7 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
      {showChartSelection ? (
       <div>
         <div>
-          <label>Chart Type:</label>
+          <label className="text-black">Chart Type:</label>
           <select value={chartType} onChange={handleOptionChange(setChartType)}>
             {allowedVisualizations.includes('Pie') && (
               <option value="Pie">Pie</option>
@@ -134,7 +134,7 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
           </select>
         </div>
         <div>
-          <label>Year:</label>
+          <label className="text-black">Year:</label>
           <select value={year} onChange={handleOptionChange(setYear)}>
             <option value="2023">2023</option>
             <option value="2024">2024</option>
@@ -142,7 +142,7 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
           </select>
         </div>
         <div>
-          <label>Month:</label>
+          <label className="text-black">Month:</label>
           <select value={month} onChange={handleOptionChange(setMonth)}>
             <option value="Current">Current</option>
             <option value="January">January</option>
@@ -160,7 +160,7 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
           </select>
         </div>
         <div>
-          <label>Item Type:</label>
+          <label className="text-black">Chart Type:</label>
           <select 
             value={itemType} 
             onChange={(e) => {

@@ -77,6 +77,7 @@
   min-height: 100px;
   margin-bottom: 10px;
   padding: 8px;
+  color: black;
 }
 
 .modal button {
@@ -161,4 +162,12 @@
   margin: 10px 0;
   text-align: center;
   font-family: Roboto, sans-serif;
+}
+
+.mainContainer select {
+  color: black;
+}
+
+.mainContainer select option {
+  color: black;
 }
