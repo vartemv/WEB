@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS orders (
 );
 
 CREATE TABLE IF NOT EXISTS items (
-  id INTEGER PRIMARY KEY,
+  id Serial PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   category VARCHAR(100) NOT NULL,
   price INTEGER NOT NULL,
@@ -33,5 +33,12 @@ INSERT INTO orders (item, name, address, status, price, order_date) VALUES
 INSERT INTO orders (item, name, address, status, price, order_date) VALUES
 ('Bluetooth Speaker', 'Alice Johnson', '789 Oak Blvd, Austin, TX', 'Shipped', 60, '2024-11-05');
 
-INSERT INTO devices (name, photo) VALUES
-('3d printer', '/printer_test.jpg');
+INSERT INTO
+    items (name, category, price, quantity, min_stock_level)
+VALUES
+    ('name_1', 'Materials', 25, 35, 20),
+    ('name_2', 'Materials', 10, 22, 30),
+    ('name_3', 'Food', 25, 7, 5),
+    ('name_4', 'Wood Products', 50, 3, 2),
+    ('name_5', 'Bathroom', 15, 40, 10),
+    ('name_6', 'Bathroom', 12, 0, 5);

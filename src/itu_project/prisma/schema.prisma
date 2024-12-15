@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -18,7 +19,7 @@ model orders {
 }
 
 model items {
-  id              Int    @id
+  id              Int    @id @default(autoincrement())
   name            String @db.VarChar(100)
   category        String @db.VarChar(100)
   price           Int
