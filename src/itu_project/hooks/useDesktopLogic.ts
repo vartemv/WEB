@@ -1,3 +1,4 @@
+//Author Vereninov Artem, xveren00
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { Order, Device } from "types"; // Replace with actual type definition

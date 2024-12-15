@@ -1,3 +1,4 @@
+//Author Vereninov Artem, xveren00
 import React, { createContext, useContext, useState, ReactNode, useCallback } from "react";
 import { Device } from "@/types";
 import { useDevice } from "@/hooks/useDevice"; // Importing changeStatus function
