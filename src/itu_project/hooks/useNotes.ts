@@ -1,10 +1,35 @@
 import { useState, useEffect } from 'react';
-import type { Note } from '../types';
+import type { Note, ChartSetting } from '../types';
+
 
 export function useNotes(chartId?: number) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editedNotes, setEditedNotes] = useState<{[key: number]: string}>({});
+  const [chartDetails, setChartDetails] = useState<ChartSetting | null>(null);
+
+  useEffect(() => {
+    if (chartId) {
+      fetchNotes(chartId);
+      fetchChartDetails(chartId);
+    } else {
+      setNotes([]);
+      setChartDetails(null);
+    }
+  }, [chartId]);
+
+  const fetchChartDetails = async (id: number) => {
+    try {
+      const res = await fetch(`/api/get_chart_settings`);
+      const data = await res.json();
+      if (data.success) {
+        const chart = data.data.find((chart: ChartSetting) => chart.id === id);
+        setChartDetails(chart);
+      }
+    } catch (error) {
+      console.error('Error fetching chart details:', error);
+    }
+  };
 
   const fetchNotes = async (id: number) => {
     try {
@@ -107,8 +132,10 @@ export function useNotes(chartId?: number) {
   useEffect(() => {
     if (chartId) {
       fetchNotes(chartId);
+      fetchChartDetails(chartId);
     } else {
       setNotes([]);
+      setChartDetails(null);
     }
   }, [chartId]);
 
@@ -116,11 +143,13 @@ export function useNotes(chartId?: number) {
     notes,
     isEditing,
     editedNotes,
+    chartDetails,
     handleEditClick,
     handleSaveEdits,
     handleDeleteAll,
     handleNoteChange,
     setIsEditing,
-    setEditedNotes
+    setEditedNotes,
+    refreshChartDetails: () => chartId && fetchChartDetails(chartId) 
   };
 }

@@ -153,3 +153,12 @@
 .cancelButton:hover {
   background-color: #999;
 }
+
+.chartTitle {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #000;
+  margin: 10px 0;
+  text-align: center;
+  font-family: Roboto, sans-serif;
+}

@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import styles from '../../styles/analytics.module.css';
 import { useNotes } from "../../hooks/useNotes";
 
+
 interface NotesCardProps {
   chartId?: number;
+  onChartUpdate?: () => void;
 }
 
 const NotesCard: React.FC<NotesCardProps> = ({ chartId }) => {
@@ -11,18 +13,28 @@ const NotesCard: React.FC<NotesCardProps> = ({ chartId }) => {
     notes,
     isEditing,
     editedNotes,
+    chartDetails,
     handleEditClick,
     handleSaveEdits,
     handleDeleteAll,
     handleNoteChange,
     setIsEditing,
-    setEditedNotes
+    setEditedNotes,
+    refreshChartDetails
   } = useNotes(chartId);
+
+  useEffect(() => {
+    if (chartId) {
+      refreshChartDetails();
+    }
+  }, [chartId, refreshChartDetails]);
 
   return (
     <section className={styles.notesCard}>
       <div className={styles.notesHeader}>
-        <h2 className={styles.notesTitle}>Chart Notes</h2>
+      <h2 className={styles.notesTitle}>
+          {chartDetails ? `${chartDetails.itemtype} - ${chartDetails.month} ${chartDetails.year}` : 'Select a chart'}
+        </h2>
         <div className={styles.buttonGroup}>
           {!isEditing ? (
             <>

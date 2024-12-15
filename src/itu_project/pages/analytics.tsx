@@ -4,7 +4,7 @@ import styles from "../styles/analytics.module.css";
 import NotesCard from '../components/analytics_components/NotesCard';
 import GraphWindow from '../components/analytics_components/GraphWindow';
 import { Order } from 'types';
-import { getTotalOrders } from '@/lib/orderUtils';
+import { getTotalOrders, getTotalClients, getTotalRevenue } from '@/lib/orderUtils';
 import StatisticItem from '../components/analytics_components/StatisticsItem';
 import GraphManager from '@/components/analytics_components/GraphManager';
 import { useState } from 'react';
@@ -48,6 +48,9 @@ const Analytics: FunctionComponent = () => {
               </div>
               <div className={styles.statisticsGrid}>
                 <StatisticItem label="Total orders" value={getTotalOrders(orders)} />
+                <StatisticItem label="Total revenue" value={getTotalRevenue(orders)} />
+                <StatisticItem label="Total clients" value={getTotalClients(orders)} />
+
               </div>
             </section>
             <GraphManager 

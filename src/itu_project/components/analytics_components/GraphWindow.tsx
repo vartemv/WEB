@@ -23,7 +23,8 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
   onDelete, 
   onClick, 
   onNoteAdded, 
-  onChartSelect 
+  onChartSelect,
+  refreshChartDetails
 }) => {
   const { chartState, actions } = useGraphWindow(
     initialSettings,
@@ -168,7 +169,7 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
             }}
           >
             <option value="Orders state">Orders state</option>
-            <option value="Customer type">Customer type</option>
+            {/* <option value="Customer type">Customer type</option> */}
           </select>
         </div>
         <div className={styles.buttonGroup}>
@@ -191,23 +192,32 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
     ) : (
       !showChart && <a onClick={handleAddGraphClick}>Add chart</a>
     )}
-     {showChart && !isEditing && chartType === 'Pie' && (
-      <PieChartComponent 
-        orders={orders} 
-        itemType={itemType}
-        year={year}
-        month={month}
-      />
-    )}
+     {showChart && !isEditing && (
+        <>
+          {/* Add chart title here */}
+          <h3 className={styles.chartTitle}>
+            {itemType} - {month} {year}
+          </h3>
 
-    {showChart && !isEditing && chartType === 'Bar' && (
-      <BarChartComponent 
-        orders={orders} 
-        itemType={itemType}
-        year={year}
-        month={month}
-      />
-    )}
+          {chartType === 'Pie' && (
+            <PieChartComponent 
+              orders={orders} 
+              itemType={itemType}
+              year={year}
+              month={month}
+            />
+          )}
+
+          {chartType === 'Bar' && (
+            <BarChartComponent 
+              orders={orders} 
+              itemType={itemType}
+              year={year}
+              month={month}
+            />
+          )}
+        </>
+      )}
       {showChart && !isEditing && (
       <button 
           className={styles.noteButton}

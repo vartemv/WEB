@@ -48,13 +48,13 @@ export function useGraphWindow(
     ) => {
         setter(e.target.value);
     };
+
     const handleSaveChart = async () => {
       try {
         if (!orders || orders.length === 0) {
           setError('No orders available');
           return;
         }
-    
         
         const config = getChartConfig(itemType);
         try {
@@ -79,10 +79,23 @@ export function useGraphWindow(
     
           const data = await response.json();
           if (data.success) {
-            setError(null); 
-            setShowChart(true);
+            setError(null);
+            setShowChart(true); 
             setIsEditing(false);
             setShowChartSelection(false);
+            onClick?.();
+            
+            
+            const updatedChart = {
+              id: chartId,
+              chartType,
+              year,
+              month,
+              itemType
+            };
+            
+            
+            onChartSelect?.(chartId, updatedChart);
           }
         } else {
           await handleCreateChart();
