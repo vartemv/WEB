@@ -21,6 +21,7 @@ export function useGraphWindow(
     const [showNoteModal, setShowNoteModal] = useState(false);
     const [note, setNote] = useState('');
     const [error, setError] = useState<string | null>(null);
+    const [isEditing, setIsEditing] = useState(false);
 
   
     const handleAddGraphClick = (e: React.MouseEvent) => {
@@ -32,6 +33,38 @@ export function useGraphWindow(
         e: React.ChangeEvent<HTMLSelectElement>
     ) => {
         setter(e.target.value);
+    };
+
+    const handleSaveChart = async () => {
+      if (isEditing && chartId) {
+        try {
+          const response = await fetch('/api/update_chart_settings', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: chartId,
+              chartType,
+              year,
+              month,
+              itemType
+            })
+          });
+    
+          const data = await response.json();
+          if (data.success) {
+            setShowChart(true);
+            setIsEditing(false);
+            setShowChartSelection(false);
+            
+          }
+        } catch (error) {
+          console.error('Error updating chart:', error);
+          setError('Failed to update chart');
+        }
+      } else {
+        
+        await handleCreateChart();
+      }
     };
 
     const handleDelete = async () => {
@@ -135,7 +168,8 @@ export function useGraphWindow(
       chartId,
       showNoteModal,
       note,
-      error
+      error,
+      isEditing
     },
     actions: {
       setShowChartSelection,
@@ -150,7 +184,9 @@ export function useGraphWindow(
       handleDelete,
       handleAddGraphClick,
       handleOptionChange,
-      setError
+      setError,
+      setIsEditing,
+      handleSaveChart
     }
   };
 }

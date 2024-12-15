@@ -45,7 +45,8 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
     showNoteModal,
     note,
     chartId,
-    error
+    error,
+    isEditing
   } = chartState;
 
   const {
@@ -61,11 +62,19 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
     setShowNoteModal,
     handleAddGraphClick,
     handleOptionChange,
-    setError
+    setError,
+    setIsEditing,
+    handleSaveChart
   } = actions;
 
   const config = getChartConfig(itemType);
   const allowedVisualizations = config?.allowedVisualizations || ['Pie'];
+
+   // Add this handler
+   const handleEditClick = () => {
+    setIsEditing(true);
+    setShowChartSelection(true);
+  };
 
 
   return (
@@ -81,94 +90,132 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
     >
       {error && <div className={styles.error}>{error}</div>}
 
-        {showChart && (
-      <button 
-        className={styles.deleteButton}
-        onClick={handleDelete}
-        title="Delete chart"
-        type="button"
-      >
-        ×
-      </button>
-    )}
-      {showChartSelection ? (
+      {showChart && (
+        <>
+          <button 
+            className={styles.editButton}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEditClick();
+            }}
+            title="Edit chart"
+            type="button"
+          >
+            Edit
+          </button>
+          <button 
+            className={styles.deleteButton}
+            onClick={handleDelete}
+            title="Delete chart"
+            type="button"
+          >
+            ×
+          </button>
+        </>
+      )}
+     {showChartSelection ? (
+      <div>
         <div>
-          <div>
-            <label>Chart Type:</label>
-            <select value={chartType} onChange={handleOptionChange(setChartType)}>
-              {allowedVisualizations.includes('Pie') && (
-                <option value="Pie">Pie</option>
-              )}
-              {allowedVisualizations.includes('Bar') && (
-                <option value="Bar">Bar</option>
-              )}
-            </select>
-          </div>
-          <div>
-            <label>Year:</label>
-            <select value={year} onChange={handleOptionChange(setYear)}>
-              <option value="2023">2023</option>
-              <option value="2024">2024</option>
-              <option value="2025">2025</option>
-            </select>
-          </div>
-          <div>
-            <label>Month:</label>
-            <select value={month} onChange={handleOptionChange(setMonth)}>
-              <option value="Current">Current</option>
-              <option value="January">January</option>
-              <option value="February">February</option>
-              <option value="March">March</option>
-              <option value="April">April</option>
-              <option value="May">May</option>
-              <option value="June">June</option>
-              <option value="July">July</option>
-              <option value="August">August</option>
-              <option value="September">September</option>
-              <option value="October">October</option>
-              <option value="November">November</option>
-              <option value="December">December</option>
-            </select>
-          </div>
-          <div>
-            <label>Item Type:</label>
-            <select 
-              value={itemType} 
-              onChange={(e) => {
-                const newType = e.target.value;
-                setItemType(newType);
-                const newConfig = getChartConfig(newType);
-                if (newConfig && !newConfig.allowedVisualizations.includes(chartType)) {
-                  setChartType(newConfig.allowedVisualizations[0]);
-                }
-              }}
-            >
-              <option value="Orders state">Orders state</option>
-              <option value="Product category">Product category</option>
-              <option value="Customer type">Customer type</option>
-            </select>
-          </div>
-          <button onClick={handleCreateChart}>Create Chart</button>
+          <label>Chart Type:</label>
+          <select value={chartType} onChange={handleOptionChange(setChartType)}>
+            {allowedVisualizations.includes('Pie') && (
+              <option value="Pie">Pie</option>
+            )}
+            {allowedVisualizations.includes('Bar') && (
+              <option value="Bar">Bar</option>
+            )}
+          </select>
         </div>
-      ) : (
-        !showChart && <a onClick={handleAddGraphClick}>Add chart</a>
+        <div>
+          <label>Year:</label>
+          <select value={year} onChange={handleOptionChange(setYear)}>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+          </select>
+        </div>
+        <div>
+          <label>Month:</label>
+          <select value={month} onChange={handleOptionChange(setMonth)}>
+            <option value="Current">Current</option>
+            <option value="January">January</option>
+            <option value="February">February</option>
+            <option value="March">March</option>
+            <option value="April">April</option>
+            <option value="May">May</option>
+            <option value="June">June</option>
+            <option value="July">July</option>
+            <option value="August">August</option>
+            <option value="September">September</option>
+            <option value="October">October</option>
+            <option value="November">November</option>
+            <option value="December">December</option>
+          </select>
+        </div>
+        <div>
+          <label>Item Type:</label>
+          <select 
+            value={itemType} 
+            onChange={(e) => {
+              const newType = e.target.value;
+              setItemType(newType);
+              const newConfig = getChartConfig(newType);
+              if (newConfig && !newConfig.allowedVisualizations.includes(chartType)) {
+                setChartType(newConfig.allowedVisualizations[0]);
+              }
+            }}
+          >
+            <option value="Orders state">Orders state</option>
+            <option value="Customer type">Customer type</option>
+          </select>
+        </div>
+        <div className={styles.buttonGroup}>
+          <button 
+            onClick={handleSaveChart}
+            className={styles.saveButton}
+          >
+            {isEditing ? 'Save Changes' : 'Create Chart'}
+          </button>
+          {isEditing && (
+        <button 
+          onClick={() => {
+            setShowChartSelection(false);
+            setIsEditing(false);
+            
+            if (initialSettings) {
+              setChartType(initialSettings.charttype);
+              setYear(initialSettings.year);
+              setMonth(initialSettings.month);
+              setItemType(initialSettings.itemtype);
+            }
+          }}
+          className={styles.cancelButton}
+        >
+          Cancel
+        </button>
       )}
-      {showChart && chartType === 'Pie' && (
-         <PieChartComponent 
-         orders={orders} 
-         itemType={itemType}
-         year={year}
-         month={month}
-       />
-      )}
-      {showChart && chartType === 'Bar' && (
-         <BarChartComponent 
-         orders={orders} 
-         itemType={itemType}
-         year={year}
-         month={month}
-       />
-      )}
+    </div>
+  </div>
+    ) : (
+      !showChart && <a onClick={handleAddGraphClick}>Add chart</a>
+    )}
+     {showChart && !isEditing && chartType === 'Pie' && (
+      <PieChartComponent 
+        orders={orders} 
+        itemType={itemType}
+        year={year}
+        month={month}
+      />
+    )}
+
+    {showChart && !isEditing && chartType === 'Bar' && (
+      <BarChartComponent 
+        orders={orders} 
+        itemType={itemType}
+        year={year}
+        month={month}
+      />
+    )}
       {showChart && (
         <button 
           className={styles.noteButton}
