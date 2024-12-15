@@ -12,6 +12,7 @@ import DeviceDetails from "../components/deviceDetails";
 import styles from "../styles/Desktop.module.css";
 import { DndContext } from "@dnd-kit/core";
 import { DevicesProvider, useDevices } from "@/contexts/DeviceContext";
+import { useSensor,useSensors, MouseSensor } from "@dnd-kit/core";
 
 const DesktopContent: FunctionComponent = () => {
     const {
@@ -41,8 +42,15 @@ const DesktopContent: FunctionComponent = () => {
         refreshDevices();
     },[]);
 
+    const mouseSensor = useSensor(MouseSensor, {
+        activationConstraint: {
+          distance: 10, // Enable sort function when dragging 10px   💡 here!!!
+        },
+      })
+
+    const sensors = useSensors(mouseSensor)
     return (
-        <DndContext onDragEnd={handleDragEnd}>
+        <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
         <div className={styles.desktop1}>
             <Dashboard navigateToAnalytics={navigateToAnalytics} />
             <OrdersGrid orders={filteredOrders} onOrderClick={openDetails} />

@@ -12,34 +12,39 @@ interface DevicesGridProps {
 }
 
 export const DeviceGrid: FunctionComponent<DevicesGridProps> = ({ orders, onDeviceClick }) => {
-    const {devices} = useDevices();
+    const { devices } = useDevices();
     console.log(devices)
-    return(
-    <div className={styles.DevicesGrid}>
-        {devices.map((device) => (
-            <DroppableDevice key={device.id} device={device} onDeviceClick={onDeviceClick} />
-        ))}
-    </div>)
+    return (
+        <div className={styles.DevicesGrid}>
+            {devices.map((device) => (
+                <DroppableDevice key={device.id} device={device} onDeviceClick={onDeviceClick} />
+            ))}
+        </div>)
 };
 
 interface DroppableDeviceProps {
     device: Device;
-    onDeviceClick: (order:Device) => void;
+    onDeviceClick: (order: Device) => void;
 }
 
 const DroppableDevice: FunctionComponent<DroppableDeviceProps> = ({ device, onDeviceClick }) => {
-    const { isOver, setNodeRef } = useDroppable({
-        id: device.id, // Unique identifier for the droppable area
-      });
-    const {refreshDevices} = useDevices();
+    const { isOver, setNodeRef } = device.occupied
+        ? { isOver: false, setNodeRef: () => {} } // Disable droppable if occupied
+        : useDroppable({
+              id: device.id, // Unique identifier for the droppable area
+          });
+    const { refreshDevices } = useDevices();
     return (
         <div
-        ref={setNodeRef}
-        className={`${styles.device} ${isOver ? styles.hovered : ""}`}
-        onClick={() => onDeviceClick(device)}
-        onDrop={refreshDevices}
+            ref={setNodeRef}
+            className={`${styles.device} ${isOver && !device.occupied ? styles.hovered : ""}`}
+            onClick={() => onDeviceClick(device)}
+            onDrop={refreshDevices}
         >
-            <div className={styles.Status}>{device.occupied ? "True" : "False"}</div>
+            <div
+                className={`${styles.StatusWrapper} ${device.occupied ? styles.StatusShipped : styles.StatusActive}`}>
+                <div className={styles.Status}>{device.occupied ? "Occupied" : "Free"}</div>
+            </div>
             <img src={device.photo} className={styles.devPhoto} />
             <hr className={styles.Separator} />
             <div className={styles.OrderId}>{device.name}</div>

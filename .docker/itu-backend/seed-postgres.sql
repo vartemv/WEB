@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS orders (
   address VARCHAR(255) NOT NULL,      -- Delivery address
   status VARCHAR(15) NOT NULL,
   price INTEGER NOT NULL,
-  order_date VARCHAR(13) NOT NULL
+  order_date VARCHAR(13) NOT NULL,
+  could_be_printed BOOLEAN
 );
 
 CREATE TABLE IF NOT EXISTS items (
@@ -24,14 +25,14 @@ CREATE TABLE IF NOT EXISTS devices (
   photo TEXT
 );
 
-INSERT INTO orders (item, name, address, status, price, order_date) VALUES
-('Wireless Mouse', 'John Doe', '123 Elm Street, Springfield, IL', 'Active', 25, '2024-11-10');
+INSERT INTO orders (item, name, address, status, price, order_date, could_be_printed) VALUES
+('Wireless Mouse', 'John Doe', '123 Elm Street, Springfield, IL', 'Active', 25, '2024-11-10', FALSE);
 
-INSERT INTO orders (item, name, address, status, price, order_date) VALUES
-('Laptop Stand', 'Jane Smith', '456 Maple Avenue, Denver, CO', 'Active', 45, '2024-11-08');
+INSERT INTO orders (item, name, address, status, price, order_date, could_be_printed) VALUES
+('Laptop Stand', 'Jane Smith', '456 Maple Avenue, Denver, CO', 'Active', 45, '2024-11-08', FALSE);
 
-INSERT INTO orders (item, name, address, status, price, order_date) VALUES
-('Bluetooth Speaker', 'Alice Johnson', '789 Oak Blvd, Austin, TX', 'Shipped', 60, '2024-11-05');
+INSERT INTO orders (item, name, address, status, price, order_date, could_be_printed) VALUES
+('Bluetooth Speaker', 'Alice Johnson', '789 Oak Blvd, Austin, TX', 'Shipped', 60, '2024-11-05', TRUE);
 
 INSERT INTO devices (name, photo) VALUES
 ('3d printer', '/printer_test.jpg');

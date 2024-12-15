@@ -97,6 +97,7 @@ export const useDesktopLogic = () => {
         handleFilterClick,
         navigateToAnalytics,
         openDeviceDetails,
-        closeDeviceDetails
+        closeDeviceDetails,
+        refreshOrder
     };
 };

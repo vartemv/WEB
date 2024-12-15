@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, ReactNode, useCallback } from "react";
 import { Device } from "@/types";
 import { useDevice } from "@/hooks/useDevice"; // Importing changeStatus function
+import { useOrder } from "@/hooks/useOrder";
+import { useDesktopLogic } from "@/hooks/useDesktopLogic";
 
 // Define the shape of the context data
 interface DevicesContextType {
@@ -25,9 +27,10 @@ const getDevicesFromDB = async (): Promise<Device[]> => {
 };
 
 // Provider component
-export const DevicesProvider = ({ children }: { children: ReactNode }) => {
+export const DevicesProvider = ({ children }: { children: ReactNode}) => {
   const [devices, setDevices] = useState<Device[]>([]);
   const { changeStatus } = useDevice(); // Accessing changeStatus function
+  const {changeOrderStatus} = useOrder();
 
   // Function to refresh devices from the API
   const refreshDevices = useCallback(async () => {
@@ -43,6 +46,7 @@ export const DevicesProvider = ({ children }: { children: ReactNode }) => {
   const handleOrderAssignment = useCallback(
     async (orderId: string, deviceId: string) => {
       await changeStatus(deviceId); // Call the changeStatus function
+      await changeOrderStatus("Printing", orderId);
       await refreshDevices(); // Refresh the device list
     },
     [refreshDevices, changeStatus]
@@ -68,6 +72,7 @@ export const DevicesProvider = ({ children }: { children: ReactNode }) => {
         refreshDevices,
         handleOrderAssignment,
         handleDragEnd,
+        
       }}
     >
       {children}

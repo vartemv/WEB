@@ -3,6 +3,7 @@ import { DndContext, useDraggable } from "@dnd-kit/core";
 import styles from "../../styles/Desktop.module.css"; // Replace with your actual styles
 import { Order } from "types"; // Replace with actual type definition
 import { useState } from "react";
+import { stat } from "fs";
 
 interface OrdersGridProps {
     orders: Order[];
@@ -14,25 +15,8 @@ interface DraggableOrderProps {
     onOrderClick: (order: Order) => void;
 }
 
-
-
 // Draggable Order Component
 const DraggableOrder: FunctionComponent<DraggableOrderProps> = ({ order, onOrderClick }) => {
-    const [isDropped, setIsDropped] = useState(false);
-
-    const dropAnimationStyle = isDropped
-        ? {
-            animation: "dropAnimation 1s forwards", // Trigger the drop animation
-        }
-        : {};
-
-    // Handle the drop event and trigger the animation
-    const handleDrop = () => {
-        setIsDropped(true);
-        setTimeout(() => {
-            setIsDropped(false); // Reset the dropped state after animation is complete
-        }, 1000); // Match the duration of the animation
-    };
 
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
         id: order.id,
@@ -48,12 +32,11 @@ const DraggableOrder: FunctionComponent<DraggableOrderProps> = ({ order, onOrder
     return (
         <div
             ref={setNodeRef}
-            style={{ ...style, ...dropAnimationStyle }}
-            {...listeners}
+            style={{ ...style }}
+            {...(order.could_be_printed && order.status === "Active" ? listeners : {})}
             {...attributes}
-            className={`${styles.order} ${isDropped ? styles.dropped : ""}`}
+            className={`${styles.order} `}
             onClick={() => onOrderClick(order)}
-            onDrop={handleDrop}
         >
             <div className={styles.TextGrid}>
                 <div className={styles.ItemCont}>
@@ -73,16 +56,17 @@ const DraggableOrder: FunctionComponent<DraggableOrderProps> = ({ order, onOrder
             <div className={styles.OrderId}> Order # {order.id}</div>
             <img className={styles.MarketplaceIcon} alt="" src="Shopify.svg" />
             <div
-                className={`${styles.StatusWrapper} ${order.status === "Shipped" ? styles.StatusShipped : styles.StatusActive
-                    }`}
+                className={`${styles.StatusWrapper} ${styles.statusPadding} ${order.status === "Shipped" ? styles.StatusShipped : (order.status === "Printing"? styles.StatusPrinting : styles.StatusActive)}`}
             >
                 <div className={styles.Status}>{order.status}</div>
             </div>
+            {order.could_be_printed && (
+                <img className={styles.PrintableIconWrapper} alt="" src="printer.svg" />
+            )}
         </div>
     );
 };
 
-// Orders Grid Component
 export const OrdersGrid: FunctionComponent<OrdersGridProps> = ({ orders, onOrderClick }) => (
     <div className={styles.OrdersGrid}>
         {orders.map((order) => (

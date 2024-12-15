@@ -33,12 +33,16 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    padding: 10px 15px;
+    padding: 5px 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50px;
     box-shadow: 4px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.statusPadding{
+    padding: 10px 15px;
 }
 
 .StatusShipped{
@@ -47,6 +51,10 @@
 
 .StatusActive{
     background-color: var(--active-color);
+}
+
+.StatusPrinting{
+    background-color: var(--accent-color);
 }
 
 
@@ -304,8 +312,8 @@
 }
 
 .devPhoto{
-    max-width: 60%; /* Ensures the image fits within the div */
-    max-height: 60%; /* Restricts the height if necessary */
+    max-width: 53%; /* Ensures the image fits within the div */
+    max-height: 53%; /* Restricts the height if necessary */
     object-fit: contain;
 }
 
@@ -321,4 +329,14 @@
     background-color: rgba(200, 200, 255, 0.2); /* Optionally change the background color */
 }
 
-
+.PrintableIconWrapper {
+    position: absolute;
+    bottom: 5%; /* Adjust as needed */
+    right: 15%; /* Adjust as needed */
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1; /* Ensure it's on top */
+}
