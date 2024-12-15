@@ -32,19 +32,15 @@ export interface Note {
 
 export interface ChartSetting {
     id: number;
-    charttype: string;
+    charttype: string; 
     year: string;
     month: string;
     itemtype: string;
     note?: string;
   }
   
-  export interface GraphWindowProps {
-    orders: Order[];
-    onCreate: () => void;
-    initialSettings?: ChartSetting;
-    onDelete: () => void;
-    onClick?: () => void;
-    onChartSelect?: (chartId: number) => void;
-    onNoteAdded?: () => void;
+  export interface ChartConfig {
+    type: string;
+    allowedVisualizations: ('Pie' | 'Bar')[];
+    getData: (orders: Order[]) => ChartData[];
   }
