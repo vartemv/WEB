@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { Note, ChartSetting } from '../types';
 
 
@@ -17,8 +17,14 @@ export function useNotes(chartId?: number) {
       setChartDetails(null);
     }
   }, [chartId]);
-  
-  const fetchChartDetails = async (id: number) => {
+
+  const refreshChartDetails = useCallback(() => {
+    if (chartId) {
+      fetchChartDetails(chartId);
+    }
+  }, [chartId]); // Only recreate when chartId changes
+
+  const fetchChartDetails = useCallback(async (id: number) => {
     try {
       const res = await fetch(`/api/get_chart_settings`);
       const data = await res.json();
@@ -29,7 +35,7 @@ export function useNotes(chartId?: number) {
     } catch (error) {
       console.error('Error fetching chart details:', error);
     }
-  };
+  }, []); 
 
   const fetchNotes = async (id: number) => {
     try {
@@ -88,9 +94,18 @@ export function useNotes(chartId?: number) {
   };
 
   const handleSaveEdits = async () => {
-    const success = await updateNotes(editedNotes);
-    if (success) {
-      setIsEditing(false);
+    try {
+      
+      const success = await updateNotes(editedNotes);
+      if (success) {
+      
+        if (chartId) {
+          await fetchChartDetails(chartId);
+        }
+        setIsEditing(false);
+      }
+    } catch (error) {
+      console.error('Error saving edits:', error);
     }
   };
 
@@ -150,6 +165,6 @@ export function useNotes(chartId?: number) {
     handleNoteChange,
     setIsEditing,
     setEditedNotes,
-    refreshChartDetails: () => chartId && fetchChartDetails(chartId) 
+    refreshChartDetails
   };
 }

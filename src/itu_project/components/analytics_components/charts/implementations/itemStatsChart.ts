@@ -9,7 +9,11 @@ export const itemStatsChart: ChartConfig = {
       throw new Error('No orders available');
     }
 
-    // Filter orders by selected year and month
+    // Get current date info
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear().toString();
+    const currentMonth = currentDate.getMonth() + 1;
+
     const filteredOrders = orders.filter(order => {
       const [orderYear, orderMonth] = order.order_date.split('/');
       const monthNames = [
@@ -18,7 +22,11 @@ export const itemStatsChart: ChartConfig = {
       ];
       const orderMonthName = monthNames[parseInt(orderMonth) - 1];
       
-      return year === orderYear && (month === 'Current' || month === orderMonthName);
+      if (month === 'Current') {
+        return orderYear === currentYear && parseInt(orderMonth) === currentMonth;
+      }
+      
+      return year === orderYear && month === orderMonthName;
     });
 
     if (!filteredOrders.length) {
