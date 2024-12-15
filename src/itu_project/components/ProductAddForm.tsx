@@ -32,7 +32,7 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
   setIsSheetOpen,
   handleSubmit,
 }) => {
-  const { deselectAllItems } = useFormData();
+  const { selectedItems, deselectAllItems, changeItemQuantity } = useFormData();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -101,6 +101,26 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
                 placeholder="Enter minimum count" 
               />
             </div>
+            {selectedItems.size > 0 && (
+              <div className="mb-4 max-h-40 overflow-y-auto p-2 border border-gray-300 rounded-md">
+                <ul className="list-none">
+                  {[...selectedItems].map((item) => (
+                    <li
+                    key={item.id}
+                    className="flex items-center justify-between py-1 border-gray-200">
+                      <span className="font-bold">{item.label}</span>
+                      <Input
+                      type="number"
+                      value={item.quantity}
+                      onChange={(e) => changeItemQuantity(item.id, parseInt(e.target.value) || 0)}
+                      className="w-16 text-center border rounded-md"
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             <div className="flex justify-between mt-4">
               <Button 
                 variant="destructive" 

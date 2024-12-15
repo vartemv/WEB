@@ -11,9 +11,13 @@ interface FormData {
 interface FormDataContextType {
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
-  selectedItems: Set<number>;
-  setSelectedItems: React.Dispatch<React.SetStateAction<Set<number>>>;
-  toggleItemSelection: (itemId: number) => void;
+  // selectedItems: Set<number>;
+  selectedItems: Set<{ id: number; label: string; quantity: number }>;
+  // setSelectedItems: React.Dispatch<React.SetStateAction<Set<number>>>;
+  setSelectedItems: React.Dispatch<React.SetStateAction<Set<{ id: number; label: string; quantity: number }>>>;
+  // toggleItemSelection: (itemId: number) => void;
+  toggleItemSelection: (item_id: number, label: string) => void;
+  changeItemQuantity: (item_id: number, quantity: number) => void;
   deselectAllItems: () => void;
   isSheetOpen: boolean;
   setIsSheetOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -43,19 +47,32 @@ export const FormDataProvider: React.FC<FormDataProviderProps> = ({ children }) 
     min_stock_level: 0,
   });
 
-  const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
+  const [selectedItems, setSelectedItems] = useState<Set<{ id: number; label: string; quantity: number }>>(new Set());
 
-  const toggleItemSelection = (itemId: number) => {
+  const toggleItemSelection = (item_id: number, name: string) => {
     const newSelectedItems = new Set(selectedItems);
-    if (newSelectedItems.has(itemId)) {
-      newSelectedItems.delete(itemId);
+    const existingItem = Array.from(newSelectedItems).find(item => item.id === item_id && item.label === name);
+    if (existingItem) {
+      newSelectedItems.delete(existingItem);
     } else {
-      newSelectedItems.add(itemId);
+      newSelectedItems.add({ id: item_id, label: name, quantity: 0 });
     }
+  
     setSelectedItems(newSelectedItems);
   };
 
-  // Deselect all items
+  const changeItemQuantity = (item_id: number, quantity: number) => {
+    const newSelectedItems = new Set(selectedItems);
+    const updatedItems = Array.from(newSelectedItems).map(item => {
+      if (item.id === item_id) {
+        return { ...item, quantity };
+      }
+      return item;
+    });
+
+    setSelectedItems(new Set(updatedItems));
+  };
+
   const deselectAllItems = () => {
     setSelectedItems(new Set());
   };
@@ -68,6 +85,7 @@ export const FormDataProvider: React.FC<FormDataProviderProps> = ({ children }) 
         selectedItems,
         setSelectedItems,
         toggleItemSelection,
+        changeItemQuantity,
         deselectAllItems,
         isSheetOpen,
         setIsSheetOpen,

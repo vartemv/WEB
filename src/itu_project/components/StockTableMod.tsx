@@ -5,7 +5,6 @@ import { EllipsisVertical, CirclePlus, CircleMinus } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger} from "@/components/ui/dropdown-menu"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from '@/components/ui/checkbox';
 import { useFormData } from "../contexts/FormDataContext";
 
 
@@ -98,10 +97,27 @@ const StockTableMod: React.FC<StockTableProps> = ({ items, onDelete, onEdit }) =
 };
 
 const handleSelectAllChange = () => {
-  if (selectedItems.size === stockItems.length) {
-    setSelectedItems(new Set()); // Deselect all
+  const stockItemIds = new Set(stockItems.map(item => item.id));
+  const selectedItemIds = new Set([...selectedItems].map(item => item.id));
+
+  const allStockItemsSelected = stockItems.every(item => selectedItemIds.has(item.id));
+
+  if (allStockItemsSelected) {
+    const filteredItems = [...selectedItems].filter(item => !stockItemIds.has(item.id));
+    setSelectedItems(new Set(filteredItems));
   } else {
-    setSelectedItems(new Set(stockItems.map(item => item.id))); // Select all
+    const updatedItems = new Set([
+      ...selectedItems,
+      ...stockItems.map(item => {
+        const existingItem = [...selectedItems].find(selected => selected.id === item.id);
+        return {
+          id: item.id,
+          label: item.name,
+          quantity: existingItem ? existingItem.quantity : 0
+        };
+      })
+    ]);
+    setSelectedItems(updatedItems);
   }
 };
 
@@ -118,7 +134,9 @@ const handleSelectAllChange = () => {
             <TableHead>
               <input
                 type="checkbox"
-                checked={selectedItems.size === items.length}
+                checked={stockItems.every(item => 
+                  [...selectedItems].some(selected => selected.id === item.id)
+                )}
                 onChange={handleSelectAllChange}
               />
             </TableHead>
@@ -142,8 +160,8 @@ const handleSelectAllChange = () => {
               <TableCell>
                 <input
                   type="checkbox"
-                  checked={selectedItems.has(item.id)}
-                  onChange={() => toggleItemSelection(item.id)} // Toggle item selection
+                  checked={Array.from(selectedItems).some(item_s => item_s.id === item.id && item_s.label === item.name)}
+                  onChange={() => toggleItemSelection(item.id, item.name)} // Toggle item selection
                 />
               </TableCell>
             )}
