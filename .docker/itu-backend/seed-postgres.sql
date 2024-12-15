@@ -33,6 +33,9 @@ INSERT INTO orders (item, name, address, status, price, order_date) VALUES
 INSERT INTO orders (item, name, address, status, price, order_date) VALUES
 ('Bluetooth Speaker', 'Alice Johnson', '789 Oak Blvd, Austin, TX', 'Shipped', 60, '2024-11-05');
 
+INSERT INTO devices (name, photo) VALUES
+('3d printer', '/printer_test.jpg');
+
 INSERT INTO
     items (name, category, price, quantity, min_stock_level)
 VALUES
