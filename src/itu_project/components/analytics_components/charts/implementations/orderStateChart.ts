@@ -1,13 +1,48 @@
-import { ChartConfig, ChartData } from '../types';
 import { Order } from 'types';
+import { ChartData } from '../types';
 
-export const orderStateChart: ChartConfig = {
+export const orderStateChart = {
   type: 'Orders state',
   allowedVisualizations: ['Pie', 'Bar'],
-  getData: (orders: Order[]): ChartData[] => {
-    const allOrders = orders.length;
-    const shippedOrders = orders.filter(order => order.status === 'Shipped').length;
-    const activeOrders = orders.filter(order => order.status === 'Active').length;
+  getData: (orders: Order[], year: string, month: string): ChartData[] => {
+    if (!orders) {
+      throw new Error('Orders array is undefined');
+    }
+
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear().toString();
+    const currentMonth = currentDate.getMonth() + 1;
+
+    const filteredOrders = orders.filter(order => {
+      const [orderYear, orderMonth] = order.order_date.split('/');
+      
+      // Convert month number to name for comparison
+      const monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+      ];
+      const orderMonthName = monthNames[parseInt(orderMonth) - 1];
+      
+      if (month === 'Current') {
+        return orderYear === currentYear && parseInt(orderMonth) === currentMonth;
+      }
+
+      // For specific month/year selection
+      const isYearMatch = orderYear === year;
+      const isMonthMatch = month === orderMonthName;
+      
+      console.log(`Order date: ${order.order_date}, Year match: ${isYearMatch}, Month match: ${isMonthMatch}`);
+      
+      return isYearMatch && isMonthMatch;
+    });
+
+    if (filteredOrders.length === 0) {
+      throw new Error(`No orders found for ${month} ${year}`);
+    }
+
+    const allOrders = filteredOrders.length;
+    const shippedOrders = filteredOrders.filter(order => order.status === 'Shipped').length;
+    const activeOrders = filteredOrders.filter(order => order.status === 'Active').length;
 
     return [
       { name: 'All Orders', value: allOrders },

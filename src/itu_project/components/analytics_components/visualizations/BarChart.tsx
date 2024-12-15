@@ -3,14 +3,17 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { Order } from 'types';
 import { getChartConfig } from '../charts/registry';
 
+// In BarChart.tsx
 type Props = {
   orders: Order[];
   itemType: string;
+  year: string;    // Add these
+  month: string;   // parameters
 };
 
-const BarChartComponent: React.FC<Props> = ({ orders, itemType }) => {
+const BarChartComponent: React.FC<Props> = ({ orders, itemType, year, month }) => {
   const config = getChartConfig(itemType);
-  const data = config?.getData(orders) || [];
+  const data = config?.getData(orders, year, month) || []; // Pass the parameters
 
   return (
     <ResponsiveContainer width="100%" height={300}>

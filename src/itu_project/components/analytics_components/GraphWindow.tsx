@@ -31,7 +31,8 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
     onChartSelect,
     onClick,
     onDelete,
-    onCreate
+    onCreate,
+    orders
   );
 
   const { 
@@ -43,7 +44,8 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
     itemType,
     showNoteModal,
     note,
-    chartId
+    chartId,
+    error
   } = chartState;
 
   const {
@@ -58,7 +60,8 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
     handleCreateChart,
     setShowNoteModal,
     handleAddGraphClick,
-    handleOptionChange    
+    handleOptionChange,
+    setError
   } = actions;
 
   const config = getChartConfig(itemType);
@@ -76,6 +79,8 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
         }
       }}
     >
+      {error && <div className={styles.error}>{error}</div>}
+
         {showChart && (
       <button 
         className={styles.deleteButton}
@@ -149,10 +154,20 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
         !showChart && <a onClick={handleAddGraphClick}>Add chart</a>
       )}
       {showChart && chartType === 'Pie' && (
-        <PieChartComponent orders={orders} itemType={itemType} />
+         <PieChartComponent 
+         orders={orders} 
+         itemType={itemType}
+         year={year}
+         month={month}
+       />
       )}
       {showChart && chartType === 'Bar' && (
-        <BarChartComponent orders={orders} itemType={itemType} />
+         <BarChartComponent 
+         orders={orders} 
+         itemType={itemType}
+         year={year}
+         month={month}
+       />
       )}
       {showChart && (
         <button 

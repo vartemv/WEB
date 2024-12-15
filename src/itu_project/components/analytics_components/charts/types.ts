@@ -8,5 +8,5 @@ export interface ChartData {
 export interface ChartConfig {
   type: string;
   allowedVisualizations: ('Pie' | 'Bar')[];
-  getData: (orders: Order[]) => ChartData[];
+  getData: (orders: Order[], year: string, month: string) => ChartData[];
 }

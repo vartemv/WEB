@@ -8,7 +8,8 @@ export function useGraphWindow(
     onChartSelect?: (chartId: number) => void,
     onClick?: () => void,
     onDelete?: () => void,
-    onCreate?: () => void
+    onCreate?: () => void,
+    orders?: Order[]
   ) {
     const [showChartSelection, setShowChartSelection] = useState(false);
     const [chartType, setChartType] = useState(initialSettings?.charttype || 'Pie');
@@ -19,6 +20,8 @@ export function useGraphWindow(
     const [chartId, setChartId] = useState<number | undefined>(initialSettings?.id);
     const [showNoteModal, setShowNoteModal] = useState(false);
     const [note, setNote] = useState('');
+    const [error, setError] = useState<string | null>(null);
+
   
     const handleAddGraphClick = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -87,23 +90,39 @@ export function useGraphWindow(
 
   const handleCreateChart = async () => {
     try {
-        const response = await fetch('/api/save_chart_settings', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chartType, year, month, itemType })
-        });
 
-        const data = await response.json();
-        if (data.success) {
-            setChartId(data.data.id);
-            setShowChart(true);
-            setShowChartSelection(false);
-            onCreate?.(); 
-        }
+      if (!orders || orders.length === 0) {
+        setError('No orders available');
+        return;
+      }
+      // Check if data exists before creating chart
+      const config = getChartConfig(itemType);
+      try {
+        config?.getData(orders, year, month);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'No data available');
+        return; // Stop chart creation
+      }
+
+      const response = await fetch('/api/save_chart_settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chartType, year, month, itemType })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setError(null); // Clear any previous errors
+        setChartId(data.data.id);
+        setShowChart(true);
+        setShowChartSelection(false);
+        onCreate?.();
+      }
     } catch (error) {
-        console.error('Error creating chart:', error);
+      console.error('Error creating chart:', error);
+      setError('Failed to create chart');
     }
-};
+  };
 
   return {
     chartState: {
@@ -115,7 +134,8 @@ export function useGraphWindow(
       showChart,
       chartId,
       showNoteModal,
-      note
+      note,
+      error
     },
     actions: {
       setShowChartSelection,
@@ -129,7 +149,8 @@ export function useGraphWindow(
       handleCreateChart,
       handleDelete,
       handleAddGraphClick,
-      handleOptionChange
+      handleOptionChange,
+      setError
     }
   };
 }

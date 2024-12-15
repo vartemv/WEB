@@ -6,13 +6,15 @@ import { getChartConfig } from '../charts/registry';
 type Props = {
   orders: Order[];
   itemType: string;
+  year: string;
+  month: string;
 };
 
 const COLORS = ['#65558f', '#00C49F', '#FFBB28'];
 
-const PieChartComponent: React.FC<Props> = ({ orders, itemType }) => {
+const PieChartComponent: React.FC<Props> = ({ orders, itemType, year, month }) => {
   const config = getChartConfig(itemType);
-  const data = config?.getData(orders) || [];
+  const data = config?.getData(orders, year, month) || [];
 
   return (
     <ResponsiveContainer width="100%" height={300}>
