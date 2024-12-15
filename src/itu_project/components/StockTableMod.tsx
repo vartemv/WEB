@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '../styles/StockTable.module.css';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { EllipsisVertical } from 'lucide-react';
+import { EllipsisVertical, CirclePlus, CircleMinus } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger} from "@/components/ui/dropdown-menu"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { Checkbox } from '@/components/ui/checkbox';
+import { useFormData } from "../contexts/FormDataContext";
 
 
 interface StockItem {
@@ -23,6 +25,9 @@ interface StockTableProps {
 }
 
 const StockTableMod: React.FC<StockTableProps> = ({ items, onDelete, onEdit }) => {
+  const { selectedItems, setSelectedItems, toggleItemSelection, isSheetOpen } = useFormData();
+  const [stockItems, setStockItems] = useState<StockItem[]>(items);
+  const [hoveredRow, setHoveredRow] = useState<number | null>(null);
 
   const getAvailabilityClass = (item: StockItem) => {
     if (item.quantity == 0) {
@@ -34,14 +39,39 @@ const StockTableMod: React.FC<StockTableProps> = ({ items, onDelete, onEdit }) =
     }
   };
 
-  const handleIncrease = (item: StockItem) => {
-    // const newQuantity = item.quantity + 1;
-    // onQuantityChange(item.id, newQuantity);
-  };
+  const handleOperation = async (item_id: number, operation: boolean) => {
+    setStockItems((stockItems) =>
+      stockItems.map((item) => {
+        if (item.id === item_id) {
+          const newQuantity = operation ? item.quantity + 1 : item.quantity - 1;
+          return { ...item, quantity: newQuantity >= 0 ? newQuantity : 0 };
+        }
+        return item;
+      })
+    );
+      
 
-  const handleDecrease = (item: StockItem) => {
-    // const newQuantity = Math.max(0, item.quantity - 1);
-    // onQuantityChange(item.id, newQuantity);
+    const response = await fetch('/api/update_quantity', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ item_id, change: operation }),
+    });
+
+    const data = await response.json();
+    
+    if (data.success) {
+      // console.log('Item updated successfully');
+      // data.updatedQuantity
+    } else {
+      setStockItems((stockItems) =>
+        stockItems.map((item) =>
+          item.id === item_id
+            ? { ...item, quantity: operation ? item.quantity - 1 : item.quantity + 1 }
+            : item
+      ));
+    }
   };
 
   const handleDelete = async (item_id: number) => {
@@ -67,11 +97,32 @@ const StockTableMod: React.FC<StockTableProps> = ({ items, onDelete, onEdit }) =
     }
 };
 
+const handleSelectAllChange = () => {
+  if (selectedItems.size === stockItems.length) {
+    setSelectedItems(new Set()); // Deselect all
+  } else {
+    setSelectedItems(new Set(stockItems.map(item => item.id))); // Select all
+  }
+};
+
+  useEffect(() => {
+    setStockItems(items);
+  }, [items]);
+
   return (<>
     <Table>
       <TableCaption>A list of your items.</TableCaption>
       <TableHeader>
         <TableRow>
+          {isSheetOpen && (
+            <TableHead>
+              <input
+                type="checkbox"
+                checked={selectedItems.size === items.length}
+                onChange={handleSelectAllChange}
+              />
+            </TableHead>
+          )}
           <TableHead className="w-[100px]">ID</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Quantity</TableHead>
@@ -82,11 +133,41 @@ const StockTableMod: React.FC<StockTableProps> = ({ items, onDelete, onEdit }) =
         </TableRow>
       </TableHeader>
       <TableBody>
-        {items.map((item) => (
-          <TableRow key={item.id}>
+        {stockItems.map((item) => (
+          <TableRow key={item.id}
+            onMouseEnter={() => setHoveredRow(item.id)}
+            onMouseLeave={() => setHoveredRow(null)}
+            className="relative hover:bg-gray-100 transition">
+            {isSheetOpen && (
+              <TableCell>
+                <input
+                  type="checkbox"
+                  checked={selectedItems.has(item.id)}
+                  onChange={() => toggleItemSelection(item.id)} // Toggle item selection
+                />
+              </TableCell>
+            )}
+
             <TableCell className="font-medium">{item.id}</TableCell>
             <TableCell>{item.name}</TableCell>
-            <TableCell>{item.quantity}</TableCell>
+            {/* <TableCell>{item.quantity}</TableCell> */}
+            <TableCell className="relative flex items-center">
+              {hoveredRow === item.id ? (
+                <span className="flex items-center gap-1">
+                  <CircleMinus
+                    className="cursor-pointer text-red-500 hover:text-red-700"
+                    onClick={() => handleOperation(item.id, false)}
+                  />
+                  <span> {item.quantity} </span>
+                  <CirclePlus
+                    className="cursor-pointer text-green-500 hover:text-green-700"
+                    onClick={() => handleOperation(item.id, true)}
+                  />
+                </span>
+              ) : (
+                <span className="ml-7">{item.quantity}</span>
+              )}
+            </TableCell>
             <TableCell>{item.category}</TableCell>
             <TableCell>{item.price}</TableCell>
             <TableCell className={`${getAvailabilityClass(item)}`}>
