@@ -1,3 +1,4 @@
+// Václav Zapletal xzaple40
 import { useState, useEffect, useCallback } from 'react';
 import type { Note, ChartSetting } from '../types';
 

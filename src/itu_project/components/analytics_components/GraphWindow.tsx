@@ -1,3 +1,4 @@
+// Václav Zapletal xzaple40
 import React from 'react';
 import styles from '../../styles/GraphWindow.module.css';
 import PieChartComponent from './visualizations/PieChart';

@@ -1,3 +1,4 @@
+// Václav Zapletal xzaple40
 import { ChartConfig, ChartData } from '../types';
 import { Order } from 'types';
 

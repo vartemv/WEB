@@ -1,3 +1,4 @@
+// Václav Zapletal xzaple40
 import { useState, useEffect } from 'react';
 import { ChartSetting, Order } from '../types';
 import { getChartConfig } from '../components/analytics_components/charts/registry';

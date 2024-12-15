@@ -1,3 +1,4 @@
+// Václav Zapletal xzaple40
 import { ChartConfig } from './types';
 import { orderStateChart, customerTypeChart, itemStatsChart, dailyOrdersChart } from './implementations';
 

@@ -1,3 +1,4 @@
+// Václav Zapletal xzaple40
 import { Order } from 'types';
 
 export interface ChartData {

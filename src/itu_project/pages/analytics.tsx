@@ -1,3 +1,4 @@
+// Václav Zapletal xzaple40
 import { FunctionComponent } from 'react';
 import useSWR from 'swr';
 import styles from "../styles/analytics.module.css";

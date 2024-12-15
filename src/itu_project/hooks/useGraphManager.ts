@@ -1,3 +1,4 @@
+// Václav Zapletal xzaple40
 import { useState, useEffect } from 'react';
 import { ChartSetting } from '../types';
 
