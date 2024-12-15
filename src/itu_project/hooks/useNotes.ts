@@ -17,7 +17,7 @@ export function useNotes(chartId?: number) {
       setChartDetails(null);
     }
   }, [chartId]);
-
+  
   const fetchChartDetails = async (id: number) => {
     try {
       const res = await fetch(`/api/get_chart_settings`);

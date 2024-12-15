@@ -23,11 +23,11 @@ const NotesCard: React.FC<NotesCardProps> = ({ chartId }) => {
     refreshChartDetails
   } = useNotes(chartId);
 
-  useEffect(() => {
-    if (chartId) {
-      refreshChartDetails();
-    }
-  }, [chartId, refreshChartDetails]);
+  // useEffect(() => {
+  //   if (chartId) {
+  //     refreshChartDetails();
+  //   }
+  // }, [chartId, refreshChartDetails]);
 
   return (
     <section className={styles.notesCard}>

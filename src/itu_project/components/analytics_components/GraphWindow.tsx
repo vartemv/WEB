@@ -169,6 +169,7 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
             }}
           >
             <option value="Orders state">Orders state</option>
+            <option value="Item Statistics">Item Statistics</option>
             {/* <option value="Customer type">Customer type</option> */}
           </select>
         </div>

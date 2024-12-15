@@ -1,10 +1,15 @@
 import { ChartConfig } from './types';
-import { orderStateChart, customerTypeChart } from './implementations';
+import { orderStateChart, customerTypeChart, itemStatsChart } from './implementations';
 
 const charts: Record<string, ChartConfig> = {
   'Orders state': orderStateChart,
-  'Customer type': customerTypeChart
+  'Customer type': customerTypeChart,
+  'Item Statistics': {
+    ...itemStatsChart,
+    allowedVisualizations: ['Pie']
+  }
 };
+
 
 export const getChartConfig = (type: string): ChartConfig | undefined => 
   charts[type];
