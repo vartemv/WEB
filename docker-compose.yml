@@ -1,3 +1,4 @@
+#Author: Vereninov Artem, xveren00
 services:
   backend:
     container_name: itu_cont_BE

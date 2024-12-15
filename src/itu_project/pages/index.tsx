@@ -14,7 +14,9 @@ import { DndContext } from "@dnd-kit/core";
 import { DevicesProvider, useDevices } from "@/contexts/DeviceContext";
 import { useSensor,useSensors, MouseSensor } from "@dnd-kit/core";
 
+// Main content component for the Desktop
 const DesktopContent: FunctionComponent = () => {
+    // Destructure logic and state management from custom hook
     const {
         orders,
         filteredOrders,
@@ -31,69 +33,89 @@ const DesktopContent: FunctionComponent = () => {
         openCreateOrder,
         closeCreateOrder,
         handleFilterClick,
-        navigateToAnalytics,
         openDeviceDetails,
         closeDeviceDetails,
     } = useDesktopLogic();
 
-    const {handleDragEnd, refreshDevices} = useDevices();
+    // Access device-related state and actions from the context
+    const { handleDragEnd, refreshDevices } = useDevices();
 
-    useEffect(()=>{
+    // Refresh device list when the component mounts
+    useEffect(() => {
         refreshDevices();
-    },[]);
+    }, []);
 
+    // Configure drag sensor with activation constraints
     const mouseSensor = useSensor(MouseSensor, {
         activationConstraint: {
-          distance: 10, // Enable sort function when dragging 10px   💡 here!!!
+            distance: 10, // Activate drag only after 10px movement to prevent accidental drags
         },
-      })
+    });
 
-    const sensors = useSensors(mouseSensor)
+    // Combine sensors (can be expanded for additional sensor types)
+    const sensors = useSensors(mouseSensor);
+
     return (
+        // Provide drag-and-drop context to enable DnD functionality
         <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
-        <div className={styles.desktop1}>
-            <Dashboard navigateToAnalytics={navigateToAnalytics} />
-            <OrdersGrid orders={filteredOrders} onOrderClick={openDetails} />
-            <Filters activeFilter={activeFilter} onFilterClick={handleFilterClick} />
-            <AddOrderButton onClick={openCreateOrder} />
-            <Devices orders={orders} onDeviceClick={openDeviceDetails} onDeviceAdd={refreshDevices}/>
-            {isDetailsOpen && selectedOrder && (
-                <PortalPopup
-                    overlayColor="rgba(113, 113, 113, 0.3)"
-                    placement="Centered"
-                    onOutsideClick={closeDetails}>
-                    <Details order={selectedOrder} onChange={handleOrderChanged} />
-                </PortalPopup>
-            )}
+            <div className={styles.desktop1}>
+                {/* Dashboard component */}
+                <Dashboard />
+                {/* Orders grid displays the filtered list of orders */}
+                <OrdersGrid orders={filteredOrders} onOrderClick={openDetails} />
+                {/* Filter component to handle filtering actions */}
+                <Filters activeFilter={activeFilter} onFilterClick={handleFilterClick} />
+                {/* Button to trigger the Create Order modal */}
+                <AddOrderButton onClick={openCreateOrder} />
+                {/* Devices component displays devices and allows adding or selecting devices */}
+                <Devices 
+                    orders={orders} 
+                    onDeviceClick={openDeviceDetails} 
+                    onDeviceAdd={refreshDevices} 
+                />
 
-            {isDeviceDetailsOpen && selectedDevice && (
-                <PortalPopup
-                    overlayColor="rgba(113, 113, 113, 0.3)"
-                    placement="Centered"
-                    onOutsideClick={closeDeviceDetails}>
-                    <DeviceDetails selDevice={selectedDevice} />
-                </PortalPopup>
-            )}
+                {/* Conditional rendering: Show order details in a popup if details are open */}
+                {isDetailsOpen && selectedOrder && (
+                    <PortalPopup
+                        overlayColor="rgba(113, 113, 113, 0.3)"
+                        placement="Centered"
+                        onOutsideClick={closeDetails}>
+                        <Details order={selectedOrder} onChange={handleOrderChanged} />
+                    </PortalPopup>
+                )}
 
-            {isCreateOrderOpen && (
-                <PortalPopup
-                    overlayColor="rgba(113, 113, 113, 0.3)"
-                    placement="Centered"
-                    onOutsideClick={closeCreateOrder}>
-                    <CreateOrder onCreation={handleOrderCreated} />
-                </PortalPopup>
-            )}
-        </div>
+                {/* Conditional rendering: Show device details in a popup */}
+                {isDeviceDetailsOpen && selectedDevice && (
+                    <PortalPopup
+                        overlayColor="rgba(113, 113, 113, 0.3)"
+                        placement="Centered"
+                        onOutsideClick={closeDeviceDetails}>
+                        <DeviceDetails selDevice={selectedDevice} />
+                    </PortalPopup>
+                )}
+
+                {/* Conditional rendering: Show Create Order modal */}
+                {isCreateOrderOpen && (
+                    <PortalPopup
+                        overlayColor="rgba(113, 113, 113, 0.3)"
+                        placement="Centered"
+                        onOutsideClick={closeCreateOrder}>
+                        <CreateOrder onCreation={handleOrderCreated} />
+                    </PortalPopup>
+                )}
+            </div>
         </DndContext>
     );
 };
 
+// Main Desktop component that wraps content with DevicesProvider for state management
 const Desktop: FunctionComponent = () => {
     return (
         <DevicesProvider>
-            <DesktopContent/>
+            <DesktopContent />
         </DevicesProvider>
-    )
-} 
+    );
+}; 
 
+// Export the Desktop component as default
 export default Desktop;
