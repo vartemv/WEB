@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS orders (
 );
 
 CREATE TABLE IF NOT EXISTS items (
-  id INTEGER PRIMARY KEY,
+  id Serial PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   category VARCHAR(100) NOT NULL,
   price INTEGER NOT NULL,
@@ -17,21 +17,11 @@ CREATE TABLE IF NOT EXISTS items (
   min_stock_level INTEGER NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS chart_settings (
-  id Serial PRIMARY KEY,              -- Auto-incrementing ID
-  chartType VARCHAR(50) NOT NULL,     -- Chart type
-  year VARCHAR(4) NOT NULL,           -- Year
-  month VARCHAR(20) NOT NULL,         -- Month
-  itemType VARCHAR(50) NOT NULL,      -- Item type
-  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Creation timestamp
-);
-
-CREATE TABLE IF NOT EXISTS chart_notes (
-  id Serial PRIMARY KEY,              
-  chart_id INTEGER NOT NULL,          
-  note TEXT NOT NULL,                 
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (chart_id) REFERENCES chart_settings(id) ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS devices (
+  id Serial PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  occupied BOOLEAN DEFAULT FALSE,
+  photo TEXT
 );
 
 INSERT INTO orders (item, name, address, status, price, order_date) VALUES
@@ -43,8 +33,15 @@ INSERT INTO orders (item, name, address, status, price, order_date) VALUES
 INSERT INTO orders (item, name, address, status, price, order_date) VALUES
 ('Bluetooth Speaker', 'Alice Johnson', '789 Oak Blvd, Austin, TX', 'Shipped', 60, '2024-11-05');
 
-INSERT INTO chart_settings (chartType, year, month, itemType) VALUES
-('Pie', '2024', 'Current', 'Orders state');
+INSERT INTO devices (name, photo) VALUES
+('3d printer', '/printer_test.jpg');
 
-INSERT INTO chart_settings (chartType, year, month, itemType) VALUES
-('Bar', '2024', 'Current', 'Orders state');
+INSERT INTO
+    items (name, category, price, quantity, min_stock_level)
+VALUES
+    ('name_1', 'Materials', 25, 35, 20),
+    ('name_2', 'Materials', 10, 22, 30),
+    ('name_3', 'Food', 25, 7, 5),
+    ('name_4', 'Wood Products', 50, 3, 2),
+    ('name_5', 'Bathroom', 15, 40, 10),
+    ('name_6', 'Bathroom', 12, 0, 5);

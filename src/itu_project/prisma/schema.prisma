@@ -8,7 +8,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Order {
+model orders {
   id         Int    @id @default(autoincrement())
   item       String @db.VarChar(255)
   name       String @db.VarChar(100)
@@ -16,12 +16,10 @@ model Order {
   status     String @db.VarChar(15)
   price      Int
   order_date String @db.VarChar(13)
-
-  @@map("orders")
 }
 
 model items {
-  id              Int    @id
+  id              Int    @id @default(autoincrement())
   name            String @db.VarChar(100)
   category        String @db.VarChar(100)
   price           Int
@@ -29,24 +27,9 @@ model items {
   min_stock_level Int
 }
 
-model ChartSetting {
-  id        Int         @id @default(autoincrement())
-  charttype String      @db.VarChar(50)
-  year      String      @db.VarChar(4)
-  month     String      @db.VarChar(20)
-  itemtype  String      @db.VarChar(50)
-  createdat DateTime?   @default(now()) @db.Timestamp(6)
-  notes     ChartNote[]
-
-  @@map("chart_settings")
-}
-
-model ChartNote {
-  id         Int          @id @default(autoincrement())
-  chart_id   Int
-  note       String
-  created_at DateTime?    @default(now()) @db.Timestamp(6)
-  chart      ChartSetting @relation(fields: [chart_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@map("chart_notes")
+model devices {
+  id       Int      @id @default(autoincrement())
+  name     String   @db.VarChar(100)
+  occupied Boolean? @default(false)
+  photo    String?
 }
