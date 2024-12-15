@@ -57,9 +57,36 @@ INSERT INTO devices (name, photo) VALUES
 INSERT INTO
     items (name, category, price, quantity, min_stock_level)
 VALUES
-    ('name_1', 'Materials', 25, 35, 20),
-    ('name_2', 'Materials', 10, 22, 30),
-    ('name_3', 'Food', 25, 7, 5),
-    ('name_4', 'Wood Products', 50, 3, 2),
-    ('name_5', 'Bathroom', 15, 40, 10),
-    ('name_6', 'Bathroom', 12, 0, 5);
+  ('Espresso Beans', 'Coffee', 500, 100, 10),
+  ('Cappuccino Powder', 'Coffee', 300, 50, 5),
+  ('Latte Mix', 'Coffee', 250, 0, 8), -- Out of stock
+  ('French Press', 'Equipment', 1500, 0, 2), -- Out of stock
+  ('Coffee Filter Papers', 'Equipment', 100, 0, 20), -- Out of stock
+  ('Mugs', 'Tableware', 350, 3, 5), -- Low stock
+  ('Sugar Packets', 'Supplies', 50, 1000, 100),
+  ('Milk Frother', 'Equipment', 1200, 0, 3), -- Out of stock
+  ('Caramel Syrup', 'Supplies', 250, 30, 3),
+  ('Pastries', 'Food', 150, 60, 10),
+  ('Croissants', 'Food', 200, 0, 5), -- Out of stock
+  ('Cold Brew', 'Coffee', 400, 0, 3), -- Out of stock
+  ('Almond Milk', 'Beverage', 150, 40, 4),
+  ('Green Tea', 'Tea', 200, 100, 10),
+  ('Chai Latte', 'Coffee', 350, 50, 5),
+  ('Peanut Cookies', 'Snacks', 120, 0, 8), -- Out of stock
+  ('Chocolate Chip', 'Snacks', 130, 90, 9),
+  ('Granola Bars', 'Snacks', 150, 60, 6),
+  ('Bagels', 'Snacks', 100, 0, 5), -- Out of stock
+  ('Chips', 'Snacks', 90, 100, 10),
+  ('Muffins', 'Snacks', 110, 70, 7),
+  ('Notebooks', 'Office Supplies', 200, 200, 20),
+  ('Pens', 'Office Supplies', 50, 500, 50),
+  ('Highlighter Markers', 'Office Supplies', 70, 0, 30), -- Out of stock
+  ('Printer Paper', 'Office Supplies', 300, 0, 15), -- Out of stock
+  ('Sticky Notes', 'Office Supplies', 80, 200, 20),
+  ('Staplers', 'Office Supplies', 250, 30, 3),
+  ('Desk Organizers', 'Office Supplies', 400, 15, 2),
+  ('Coffee Cups', 'Supplies', 150, 1000, 100),
+  ('Plastic Straws', 'Supplies', 30, 500, 50),
+  ('Chai Tea Bags', 'Tea', 100, 0, 150), -- Out of stock
+  ('Instant Noodles', 'Snacks', 50, 0, 50), -- Out of stock
+  ('Reusable Water', 'Supplies', 350, 120, 100);

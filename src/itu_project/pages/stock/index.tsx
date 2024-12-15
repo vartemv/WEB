@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import Link from 'next/link';
 import styles from '../../styles/StockManagement.module.css';
 import CategoryGrid from "../../components/CategoryGrid";
-import { FormDataProvider , useFormData } from "../../contexts/FormDataContext";
 
 const StockManagement: React.FC = () => {
 
@@ -25,19 +24,6 @@ const StockManagement: React.FC = () => {
     <main className={styles.stockManagement}>
       <div className={styles.contentContainer}>
         <h1 className={styles.pageTitle}>Stock: Your Categories</h1>
-        <div className="border-t border-gray-300 my-2"></div>
-        <div>
-          <h1>All Categories TODO: delete list; change categories icons(bigger, maybe add image)</h1>
-          <ul>
-            {categories.map((category) => (
-              <li key={category}>
-                <Link href={`/stock/${category}`}>
-                {category}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          </div>
         <div className="border-t border-gray-300 my-2"></div>
         <CategoryGrid categories={categories}/>
       </div>
