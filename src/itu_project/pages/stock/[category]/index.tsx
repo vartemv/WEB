@@ -21,14 +21,9 @@ const StockManagement: React.FC = () => {
   const router = useRouter();
   const {category} = router.query;
   const [stockItems, setStockItems] = useState<Item[]>([]);
-  const [filter, setFilter] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
+  const [availabilityFilter, SetAvailabilityFilter] = useState<"none" | "in_stock" | "low_stock" | "out_of_stock">("none");
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-
-  const defaultAvailability: "none" | "in_stock" | "low_stock" | "out_of_stock" = "none";
-  const [availabilityFilter, SetAvailabilityFilter] = useState<"none" | "in_stock" | "low_stock" | "out_of_stock">(defaultAvailability);
-
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -36,6 +31,7 @@ const StockManagement: React.FC = () => {
     quantity: 0,
     min_stock_level: 0,
   });
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // const handleAddItem = async (newItem: Item) => {
   //     const response = await fetch('/api/add_item', {
@@ -62,8 +58,20 @@ const StockManagement: React.FC = () => {
   }, []);
 
   const resetFilters = () => {
-    SetAvailabilityFilter(defaultAvailability);
+    SetAvailabilityFilter("none");
+    setSearchTerm("");
   };
+
+  const filteredItems = stockItems.filter((item) => {
+    const matchesAvailability = availabilityFilter === "none" ||
+            (availabilityFilter === "in_stock" && item.quantity > item.min_stock_level) ||
+            (availabilityFilter === "low_stock" && item.quantity > 0 && item.quantity <= item.min_stock_level) ||
+            (availabilityFilter === "out_of_stock" && item.quantity === 0);
+
+    const matchesSearch = searchTerm === "" || item.name.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    return matchesAvailability && matchesSearch;
+});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();    
@@ -110,7 +118,7 @@ const StockManagement: React.FC = () => {
         <div className="border-t border-gray-300 my-2"></div>
         <section className={styles.filterSection}>
           <div className={styles.filterGroup}>
-            <SearchBar />
+            <SearchBar value={searchTerm} onChange={setSearchTerm} />
             <Select value={availabilityFilter} onValueChange={(value: string) => SetAvailabilityFilter(value as "none" | "in_stock" | "low_stock" | "out_of_stock")}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select availability" />
@@ -138,15 +146,14 @@ const StockManagement: React.FC = () => {
           handleSubmit={handleSubmit}
         />
         </section>
-
-        {/* <Modal isOpen={isModalOpen} onClose={closeModal} onSubmit={handleAddItem} /> */}
+        
         {/* <StockTable items={stockItems} /> */}
         {errorMessage && (
       <div className="text-red-500 text-sm mb-4 text-center w-full">
         {errorMessage}
       </div>
       )}
-        <StockTableMod items={stockItems} />
+        <StockTableMod items={filteredItems} />
       </div>
     </main>
     </>
