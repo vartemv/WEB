@@ -7,14 +7,15 @@ type Data = {
 };
  
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-	let { item, name, address, price, order_date, status } = req.body;
+	let { item, name, address, price, order_date, status, could_be_printed } = req.body;
 
 	if (!name || !item || !address || !price || !order_date || !status) {
-		res.status(200).json({ success: false });
+		res.status(400).json({ success: false });
 		return;
 	}
 
 	price = parseFloat(price);
+
 
 	await prisma.orders.create({
 		data: {
@@ -23,7 +24,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			name,
 			address,
 			status,
-			order_date
+			order_date,
+			could_be_printed
 		}
 	});
  

@@ -3,31 +3,30 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHe
 import { DeviceGrid } from "./devicesGrid";
 import { Device, Order } from "types"; // Replace with actual type definition
 import { useState } from "react";
-import { DeleteIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useRef } from "react";
 import { useDownloads } from "@/hooks/useDownload";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
+
 
 
 interface DevicesGridProps {
     orders: Order[];
-    devices: Device[];
     onDeviceClick: (order: Device) => void;
+    onDeviceAdd: () => void;
 }
 
-export const Devices: FunctionComponent<DevicesGridProps> = ({ orders, devices, onDeviceClick }) => {
-    const [deviceSheet, setDeviceSheet] = useState<boolean>(
-        false
-    );
+export const Devices: FunctionComponent<DevicesGridProps> = ({ orders, onDeviceClick, onDeviceAdd }) => {
 
+    const [deviceSheet, setDeviceSheet] = useState<boolean>(false);
     const [name, setName] = useState("");
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const fileRef = useRef<HTMLInputElement>(null);
     const [file, setFile] = useState<File | null>(null);
     const [addDeviceSheet, setAddDeviceSheet] = useState<boolean>(false);
-    const {photoUpload} = useDownloads();
+    const { photoUpload } = useDownloads();
 
     const openDevicesSheet = () => setDeviceSheet(true);
     const closeDevicesSheet = () => setDeviceSheet(false);
@@ -58,8 +57,14 @@ export const Devices: FunctionComponent<DevicesGridProps> = ({ orders, devices, 
                         <span className="text-white text-2xl font-bold">{`^`}</span>
                     </div>
                 </SheetTrigger>
-                <SheetContent className="h-[400px] bg-white text-black" side="bottom">
+                <SheetContent className={`h-[435px] bg-white text-black`}
+                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(1px)' }} side="bottom">
                     <SheetHeader className="flex justify-between">
+                        <VisuallyHidden.Root>
+                            <SheetDescription>
+                                Description goes here
+                            </SheetDescription>
+                        </VisuallyHidden.Root>
                         <div className="flex items-center gap-2">
                             <SheetTitle className="text-lg font-bold">Your devices</SheetTitle>
                             <button
@@ -83,15 +88,28 @@ export const Devices: FunctionComponent<DevicesGridProps> = ({ orders, devices, 
                     </SheetHeader>
 
                     <SheetFooter>
-                        <DeviceGrid orders={orders} devices={devices} onDeviceClick={onDeviceClick} />
+                        <ScrollArea>
+                            <DeviceGrid orders={orders} onDeviceClick={onDeviceClick} />
+                            <ScrollBar orientation="horizontal" />
+                        </ScrollArea>
                     </SheetFooter>
                 </SheetContent>
             </Sheet>
 
             <Sheet open={addDeviceSheet} onOpenChange={setAddDeviceSheet}>
+
                 <SheetContent className="h-[400px] bg-white text-black" side="bottom">
                     <SheetHeader>
-                        <SheetTitle>Add a New Device</SheetTitle>
+                        <div className="flex items-center gap-2">
+                            <SheetTitle>Add a New Device</SheetTitle>
+                            <button
+                                className="text-gray-600 hover:text-gray-800 transition ml-auto"
+                                onClick={closeAddDeviceSheet}
+                                aria-label="Close"
+                            >
+                                ✖
+                            </button>
+                        </div>
                     </SheetHeader>
                     <div className="flex gap-4 py-4">
                         <div className="flex flex-col w-1/3 gap-4"> {/* Adjusted width to 1/3 */}
@@ -106,18 +124,19 @@ export const Devices: FunctionComponent<DevicesGridProps> = ({ orders, devices, 
                                     className="w-full" /* Ensures the input resizes proportionally */
                                 />
                             </div>
-                            <Button
-                            onClick={async () => {
-                                await photoUpload(file, name);
-                            }}
-                            type="submit"
-                            className="w-30"
-                        >
-                            Add device
-                        </Button>
+                            <button
+                                onClick={async () => {
+                                    await photoUpload(file, name);
+                                    console.log("Hello")
+                                    onDeviceAdd();
+                                    closeAddDeviceSheet();
+                                }}
+                                type="submit"
+                                className="w-30"
+                            >
+                                Add device
+                            </button>
                         </div>
-                        
-
                         <div className="w-2/5 max-w-xs gap-2 border-2 border-dashed border-gray-400 p-4 flex flex-col items-center"> {/* Adjusted width and padding */}
                             {imagePreview && (
                                 <img

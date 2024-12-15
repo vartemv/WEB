@@ -13,12 +13,23 @@ export const useDevice = () => {
         return await axios
         .post('/api/create_device', device)
         .then((res) => {
-            return res.data;
+            return {success: true, data:res.data};
         })
         .catch ((err) => {
-            return {success: false, data: null, message: "Failes to create device"};
+            return {success: false, data: null, message: "Failed to create device"};
         })
     }
 
-    return {createDevice}
+    const changeStatus = async (deviceID: string) => {
+        return await axios
+        .post('/api/change_device_status', {deviceID:deviceID})
+        .then((res)=>{
+            return {success: true, data: res.data};
+        })
+        .catch((err)=>{
+            return {success: false, data: null, message: "Failed to change status of device"}
+        })
+    }
+
+    return {createDevice, changeStatus}
 };

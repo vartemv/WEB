@@ -26,7 +26,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       if (!file) {
         return NextResponse.json({ error: "No files received." }, { status: 400 });
       }
-      const destinationPath = path.join(process.cwd(), "public/user_photos");
+      const destinationPath = path.join(process.cwd(), "public/");
 
       let destinationFinal = "/";
       if(file.originalFilename)
@@ -36,7 +36,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       await fs.copyFile(srcPath, destinationFinal, ()=> {});
       await fs.unlink(srcPath, ()=> {});
 
-      return NextResponse.json({
+      return res.json({
         success: true,
         message: "File uploaded successfully",
         filepath: `${file.filepath}`

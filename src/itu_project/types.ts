@@ -6,6 +6,7 @@ export interface Order {
     status: string;
     price: number;
     order_date: string;
+    could_be_printed: boolean;
 }
 
 export interface Device {

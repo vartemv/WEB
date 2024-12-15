@@ -20,10 +20,10 @@ export const useDownloads = () => {
             if (file) {
                 const formDataWithFile = new FormData();
                 const timestamp = Date.now();
-                const filename = `/${timestamp}_${file.name.replaceAll(" ", "_")}`;
+                const filename = `user_photos/${timestamp}_${file.name.replaceAll(" ", "_")}`;
                 formDataWithFile.append('file', new File([file], filename, { type: file.type }));
 
-                const response = await createDevice({name: name, photo:"test"});
+                const response = await createDevice({name: name, photo:filename});
                 if (response.success) {
                     const uploadResponse = await fetch('/api/savePost', {
                         method: 'POST',

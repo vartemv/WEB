@@ -21,6 +21,12 @@ export const Filters: FunctionComponent<FiltersProps> = ({ activeFilter, onFilte
             Active
         </div>
         <div
+            className={`${styles.activeWrapper} ${activeFilter === "Printing" ? styles.ChoosedFilter : ''}`}
+            onClick={() => onFilterClick("Printing")}
+        >
+            Printing
+        </div>
+        <div
             className={`${styles.notActiveWrapper} ${activeFilter === "Shipped" ? styles.ChoosedFilter : ''}`}
             onClick={() => onFilterClick("Shipped")}
         >
