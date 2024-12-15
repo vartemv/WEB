@@ -33,19 +33,6 @@ const StockManagement: React.FC = () => {
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // const handleAddItem = async (newItem: Item) => {
-  //     const response = await fetch('/api/add_item', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify(newItem),
-  //     });
-
-  //   fetchStockItems();
-  //   closeModal();
-  // };
-
   const fetchStockItems = async () => {
       const response = await fetch(`/api/get_items?category=${category}`);
       if (!response.ok) throw new Error("Failed to fetch orders");
@@ -72,12 +59,16 @@ const StockManagement: React.FC = () => {
     
     return matchesAvailability && matchesSearch;
 });
+  
+  const handleDeleteItem = (itemId: number) => {
+    setStockItems((stockItems) => stockItems.filter((item) => item.id !== itemId));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();    
     
     try {
-      const createPostResponse = await fetch('/api/add_item', {
+      const createItemResponse = await fetch('/api/add_item', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,7 +76,7 @@ const StockManagement: React.FC = () => {
         body: JSON.stringify({...formData}),
       });
       
-      const data = await createPostResponse.json();
+      const data = await createItemResponse.json();
       if (data.success) {
         console.log('Item created successfully');
         fetchStockItems();
@@ -153,7 +144,7 @@ const StockManagement: React.FC = () => {
         {errorMessage}
       </div>
       )}
-        <StockTableMod items={filteredItems} />
+        <StockTableMod items={filteredItems} onDelete={handleDeleteItem} />
       </div>
     </main>
     </>
