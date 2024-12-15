@@ -8,6 +8,13 @@ export interface Order {
     order_date: string;
 }
 
+export interface Device {
+    id: number;
+    name: string;
+    occupied: boolean;
+    photo: string;
+}
+
 // export interface Item {
 //     id: number;
 //     name: string;

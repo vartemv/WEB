@@ -1,155 +1,81 @@
-import { FunctionComponent, useState, useEffect, useCallback, useMemo } from 'react';
-import FlipMove from 'react-flip-move';
-import Details from "../components/Details";
-import PortalPopup from "../components/PortalPopup";
-import CreateOrder from "../components/CreateOrder";
-import styles from '../styles/Desktop.module.css';
-import {Order} from 'types';
-import { useRouter } from 'next/router';
-
-
-
-const get_orders = async () => {
-    const response = await fetch("/api/get_order");
-    if (!response.ok) throw new Error("Failed to fetch orders");
-    const obj = await response.json();
-    return obj.data;
-}
+import { FunctionComponent } from "react";
+import { useDesktopLogic } from "../hooks/useDesktopLogic";
+import { Dashboard } from "@/components/desktop_components/dashboard";
+import { OrdersGrid } from "@/components/desktop_components/ordersGrid";
+import { Filters } from "@/components/desktop_components/filters";
+import { AddOrderButton } from "@/components/desktop_components/addOrder";
+import { Devices } from "@/components/desktop_components/devices";
+import  PortalPopup  from "../components/PortalPopup";
+import  Details  from "../components/Details";
+import  CreateOrder  from "../components/CreateOrder";
+import DeviceDetails from "../components/deviceDetails";
+import styles from "../styles/Desktop.module.css";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const Desktop: FunctionComponent = () => {
+    const {
+        orders,
+        devices,
+        filteredOrders,
+        isDetailsOpen,
+        isCreateOrderOpen,
+        selectedOrder,
+        activeFilter,
+        isDeviceDetailsOpen,
+        selectedDevice,
+        handleOrderCreated,
+        handleOrderChanged,
+        openDetails,
+        closeDetails,
+        openCreateOrder,
+        closeCreateOrder,
+        handleFilterClick,
+        navigateToAnalytics,
+        openDeviceDetails,
+        closeDeviceDetails
+    } = useDesktopLogic();
 
-    const router = useRouter(); 
-    const [orders, setOrders] = useState<Order[]>([]); 
-    const [isDetailsOpen, setDetailsOpen] = useState(false);
-    const [isCreateOrderOpen, setCreateOrderOpen] = useState(false);
-    const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-    const [activeFilter, setActiveFilter] = useState<string>("all");
-
-    const refreshOrder = async() => {
-        const data = await get_orders();
-        setOrders(data);
-    }
-
-    useEffect(() => {
-        refreshOrder()
-    }, []);
-
-
-    const filteredOrders = useMemo(() => {
-        return orders.filter((order) => activeFilter === "all" || activeFilter === order.status);
-    }, [orders, activeFilter]);
-
-
-    const handleOrderCreated = async () => {
-        refreshOrder();
-        setCreateOrderOpen(false);
-    };
-
-    const handleOrderChanged = async () => {
-        refreshOrder();
-        setDetailsOpen(false);
-    };
-
-    const openDetails = useCallback((order: Order) => {
-        setSelectedOrder(order);
-        setDetailsOpen(true);
-    }, []);
-
-    const closeDetails = useCallback(() => {
-        setDetailsOpen(false);
-    }, []);
-
-
-    const openCreateOrder = useCallback(() => {
-        setCreateOrderOpen(true);
-    }, []);
-
-    const closeCreateOrder = useCallback(() => {
-        setCreateOrderOpen(false);
-    }, []);
-
-    const handleFilterClick = (filter: string) => {
-        setActiveFilter(filter);
-    };
-
-    const navigateToAnalytics = () => {
-        router.push('/analytics'); 
-    };
-
-    return (<>
+    return (
+        
         <div className={styles.desktop1}>
-            <div className={styles.dashboard}>
-                <img className={styles.UserPicture} alt="" src="Ellipse_photo.svg" />
-                <div className="spacer" />
-                    <div className={styles.iconsGroup}>
-                        <img className={styles.homeIcon} alt="*" src="Home.png" />
-                        <img className={styles.homeIcon} alt="*" src="Cart.png" />
-                        <img className={styles.homeIcon} alt="*" src="Graph.png" onClick={navigateToAnalytics} />
-                        <img className={styles.homeIcon} alt="*" src="Parcel.png" />
-                        <img className={styles.homeIcon} alt="*" src="Gears.png" />
-                    </div>
-            </div>
-            <FlipMove className={styles.OrdersGrid}>
-            {filteredOrders
-            .map((order) => (
-                <div key={order.id} className={styles.order}
-                onClick={() => openDetails(order)}>
-                    
-                    <div className={styles.TextGrid}>
-                        <div className={styles.ItemCont}>
-                        <img className = {styles.TextGridIcon} src="Cart_item.svg" alt="*"/>
-                        <div className={styles.ItemName}>{order.item}</div>
-                        </div>
-                        <div className={styles.ItemCont}>
-                            <img className = {styles.TextGridIcon} src="Person.svg" alt="*"/>
-                            <div className={styles.ClientName}>{order.name}</div>
-                        </div>
-                        <div className={styles.ItemCont}>
-                            <img className = {styles.TextGridIcon} src="Location.svg" alt="*"/>
-                            <div className={styles.ClientAddress}>{order.address}</div>
-                        </div>
-                    </div>
-                    <hr className={styles.Separator} />
-                    <div className={styles.OrderId}> Order # {order.id}</div>
-                    <img className={styles.MarketplaceIcon} alt="" src="Shopify.svg" />
-                    <div className={`${styles.StatusWrapper} ${order.status == "Shipped" ? styles.StatusShipped : styles.StatusActive}`} >
-                        <div className={styles.Status}>{order.status}</div>
-                    </div>
-                </div>
-            ))}
-            </FlipMove>
-            <div className={styles.filters}>
-                <div className={`${styles.allWrapper} ${activeFilter ===  "all" ? styles.ChoosedFilter : '' }`} onClick={() => handleFilterClick("all")}>
-                    All
-                </div> 
-                <div className={`${styles.activeWrapper} ${activeFilter ===  "Active" ? styles.ChoosedFilter : '' }`} onClick={() => handleFilterClick("Active")}>
-                    Active
-                </div>
-                <div className={`${styles.notActiveWrapper} ${activeFilter ===  "Shipped" ? styles.ChoosedFilter : '' }`} onClick={() => handleFilterClick("Shipped")}>
-                    Shipped
-                </div>
-            </div>
-            <div className={styles.add} onClick={openCreateOrder}>
-                <div className={styles.PlusWrapper} />
-                <img className={styles.plusIcon} alt="" src="Plus.png" />
-            </div>
+            <DndProvider backend={HTML5Backend}>
+            <Dashboard navigateToAnalytics={navigateToAnalytics} />
+            <OrdersGrid orders={filteredOrders} onOrderClick={openDetails} />
+            <Filters activeFilter={activeFilter} onFilterClick={handleFilterClick} />
+            <AddOrderButton onClick={openCreateOrder} />
+            <Devices orders={orders} devices={devices} onDeviceClick={openDeviceDetails}/>
+            
+
+            {isDetailsOpen && selectedOrder && (
+                <PortalPopup
+                    overlayColor="rgba(113, 113, 113, 0.3)"
+                    placement="Centered"
+                    onOutsideClick={closeDetails}>
+                    <Details order={selectedOrder} onChange={handleOrderChanged} />
+                </PortalPopup>
+            )}
+
+            {isDeviceDetailsOpen && selectedDevice && (
+                <PortalPopup
+                    overlayColor="rgba(113, 113, 113, 0.3)"
+                    placement="Centered"
+                    onOutsideClick={closeDeviceDetails}>
+                    <DeviceDetails selDevice={selectedDevice} />
+                </PortalPopup>
+            )}
+
+            {isCreateOrderOpen && (
+                <PortalPopup
+                    overlayColor="rgba(113, 113, 113, 0.3)"
+                    placement="Centered"
+                    onOutsideClick={closeCreateOrder}>
+                    <CreateOrder onCreation={handleOrderCreated} />
+                </PortalPopup>
+            )}
+            </DndProvider>
         </div>
-        {isDetailsOpen && selectedOrder &&(
-            <PortalPopup
-                overlayColor="rgba(113, 113, 113, 0.3)"
-                placement="Centered"
-                onOutsideClick={closeDetails}>
-                <Details order={selectedOrder} onChange={handleOrderChanged}/>
-            </PortalPopup>
-        )}
-        {isCreateOrderOpen && (
-            <PortalPopup
-                overlayColor="rgba(113, 113, 113, 0.3)"
-                placement="Centered"
-                onOutsideClick={closeCreateOrder}>
-                <CreateOrder onCreation={handleOrderCreated}/>
-            </PortalPopup>
-        )}</>);
+    );
 };
 
 export default Desktop;

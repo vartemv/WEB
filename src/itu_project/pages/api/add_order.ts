@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 	price = parseFloat(price);
 
-	await prisma.order.create({
+	await prisma.orders.create({
 		data: {
 			price,
 			item,

@@ -15,7 +15,7 @@ services:
 
   application:
     container_name: itu_cont_FE
-    image: node:lts-alpine
+    image: node:20-alpine3.17
     ports:
         - "3000:3000"
     volumes:

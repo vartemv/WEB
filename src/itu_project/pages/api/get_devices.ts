@@ -8,7 +8,7 @@ type Data = {
  
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
 	try {
-		const products = await prisma.orders.findMany(
+		const products = await prisma.devices.findMany(
 			{
 				orderBy: [
 					{
