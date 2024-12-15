@@ -64,7 +64,9 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
     handleOptionChange,
     setError,
     setIsEditing,
-    handleSaveChart
+    handleSaveChart,
+    setShowChart,
+    handleCancel
   } = actions;
 
   const config = getChartConfig(itemType);
@@ -90,29 +92,29 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
     >
       {error && <div className={styles.error}>{error}</div>}
 
-      {showChart && (
-        <>
-          <button 
-            className={styles.editButton}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleEditClick();
-            }}
-            title="Edit chart"
-            type="button"
-          >
-            Edit
-          </button>
-          <button 
-            className={styles.deleteButton}
-            onClick={handleDelete}
-            title="Delete chart"
-            type="button"
-          >
-            ×
-          </button>
-        </>
-      )}
+      {showChart && !isEditing && (
+      <>
+        <button 
+          className={styles.editButton}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleEditClick();
+          }}
+          title="Edit chart"
+          type="button"
+        >
+          Edit
+        </button>
+        <button 
+          className={styles.deleteButton}
+          onClick={handleDelete}
+          title="Delete chart"
+          type="button"
+        >
+          ×
+        </button>
+      </>
+    )}
      {showChartSelection ? (
       <div>
         <div>
@@ -177,23 +179,13 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
             {isEditing ? 'Save Changes' : 'Create Chart'}
           </button>
           {isEditing && (
-        <button 
-          onClick={() => {
-            setShowChartSelection(false);
-            setIsEditing(false);
-            
-            if (initialSettings) {
-              setChartType(initialSettings.charttype);
-              setYear(initialSettings.year);
-              setMonth(initialSettings.month);
-              setItemType(initialSettings.itemtype);
-            }
-          }}
-          className={styles.cancelButton}
-        >
-          Cancel
-        </button>
-      )}
+            <button 
+            onClick={handleCancel}
+            className={styles.cancelButton}
+          >
+            Cancel
+          </button>
+          )}
     </div>
   </div>
     ) : (
@@ -216,8 +208,8 @@ const GraphWindow: React.FC<GraphWindowProps> = ({
         month={month}
       />
     )}
-      {showChart && (
-        <button 
+      {showChart && !isEditing && (
+      <button 
           className={styles.noteButton}
           onClick={() => setShowNoteModal(true)}
         >

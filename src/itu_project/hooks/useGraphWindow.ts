@@ -23,6 +23,20 @@ export function useGraphWindow(
     const [error, setError] = useState<string | null>(null);
     const [isEditing, setIsEditing] = useState(false);
 
+    const handleCancel = () => {
+      setShowChartSelection(false);
+      setIsEditing(false);
+      setError(null);
+      setShowChart(true);
+  
+      if (initialSettings) {
+        setChartType(initialSettings.charttype);
+        setYear(initialSettings.year);
+        setMonth(initialSettings.month);
+        setItemType(initialSettings.itemtype);
+      }
+    };
+
   
     const handleAddGraphClick = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -34,10 +48,23 @@ export function useGraphWindow(
     ) => {
         setter(e.target.value);
     };
-
     const handleSaveChart = async () => {
-      if (isEditing && chartId) {
+      try {
+        if (!orders || orders.length === 0) {
+          setError('No orders available');
+          return;
+        }
+    
+        
+        const config = getChartConfig(itemType);
         try {
+          config?.getData(orders, year, month);
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'No data available');
+          return; 
+        }
+    
+        if (isEditing && chartId) {
           const response = await fetch('/api/update_chart_settings', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -52,18 +79,17 @@ export function useGraphWindow(
     
           const data = await response.json();
           if (data.success) {
+            setError(null); 
             setShowChart(true);
             setIsEditing(false);
             setShowChartSelection(false);
-            
           }
-        } catch (error) {
-          console.error('Error updating chart:', error);
-          setError('Failed to update chart');
+        } else {
+          await handleCreateChart();
         }
-      } else {
-        
-        await handleCreateChart();
+      } catch (error) {
+        console.error('Error updating chart:', error);
+        setError('Failed to update chart');
       }
     };
 
@@ -186,7 +212,9 @@ export function useGraphWindow(
       handleOptionChange,
       setError,
       setIsEditing,
-      handleSaveChart
+      handleSaveChart,
+      setShowChart,
+      handleCancel
     }
   };
 }
