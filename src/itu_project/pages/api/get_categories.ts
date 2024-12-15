@@ -8,8 +8,12 @@ type Data = {
  
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
 	try {
-		const products = await prisma.orders.findMany(
+		const categories = await prisma.items.findMany(
 			{
+                select: {
+                    category: true,
+                },
+                distinct: ['category'],
 				orderBy: [
 					{
 						id: 'asc',
@@ -17,7 +21,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				]
 			}
 		);
-		res.status(200).json({ success: true, data: products });
+
+        const allCategories = categories.map((item) => item.category);
+        const finalCategories = ['All', ...allCategories];
+		res.status(200).json({ success: true, data: finalCategories });
 	} catch (error) {
         console.log(error);
 		res.status(200).json({ success: false });

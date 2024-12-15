@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		return;
 	}
 
-	await prisma.order.delete({
+	await prisma.orders.delete({
 		where: {
 			id: id,
 		}

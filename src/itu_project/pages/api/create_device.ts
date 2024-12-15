@@ -3,23 +3,24 @@ import type { NextApiRequest, NextApiResponse } from 'next';
  
 type Data = {
 	success: boolean;
-	data?: any;
+	info?: any;
 };
  
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-	try {
-		const products = await prisma.orders.findMany(
-			{
-				orderBy: [
-					{
-						id: 'asc',
-					}
-				]
-			}
-		);
-		res.status(200).json({ success: true, data: products });
-	} catch (error) {
-        console.log(error);
+	let { name, photo } = req.body;
+
+	if (!name || !photo) {
 		res.status(200).json({ success: false });
+		return;
 	}
+
+	await prisma.devices.create({
+		data: {
+			name,
+            photo,
+            occupied: false,
+		}
+	});
+ 
+	res.status(200).json({ success: true });
 }
