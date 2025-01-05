@@ -92,7 +92,7 @@ const StockTableMod: React.FC<StockTableProps> = ({ items, onDelete, onEdit }) =
       }
 
     } catch (error) {
-      console.error("Error creating item:", error);
+      console.error("Error deleting item:", error);
     }
 };
 
@@ -108,14 +108,12 @@ const handleSelectAllChange = () => {
   } else {
     const updatedItems = new Set([
       ...selectedItems,
-      ...stockItems.map(item => {
-        const existingItem = [...selectedItems].find(selected => selected.id === item.id);
-        return {
-          id: item.id,
-          label: item.name,
-          quantity: existingItem ? existingItem.quantity : 0
-        };
-      })
+      ...stockItems.filter(item => ![...selectedItems].some(selected => selected.id === item.id))
+      .map(item => ({
+        id: item.id,
+        label: item.name,
+        quantity: 0
+      }))
     ]);
     setSelectedItems(updatedItems);
   }

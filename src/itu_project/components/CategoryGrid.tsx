@@ -14,7 +14,7 @@ const CategoryGrid: React.FC<CategoryGridProp> = ({categories}) => {
             <Link 
             key={category} 
             href={`/stock/${category}`} 
-            className="p-4 border rounded shadow hover:bg-gray-100 cursor-pointer block"
+            className="p-4 border rounded-lg shadow hover:bg-gray-100 cursor-pointer block"
           >
             {category}
           </Link>
