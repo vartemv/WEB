@@ -8,22 +8,17 @@ import { useDesktopLogic } from "@/hooks/useDesktopLogic"; // Importing custom h
 import { useDevices } from "@/contexts/DeviceContext"; // Importing context hook for devices data
 
 // DevicesGridProps interface defines the expected props for DeviceGrid component
-interface DevicesGridProps {
-    orders: Order[]; // List of orders (not used in this component but might be passed for other purposes)
-    onDeviceClick: (order: Device) => void; // Function to handle click event on a device
-}
 
 // DeviceGrid component renders a list of devices and maps them to DroppableDevice components
-export const DeviceGrid: FunctionComponent<DevicesGridProps> = ({ orders, onDeviceClick }) => {
+export const DeviceGrid: FunctionComponent = ({ }) => {
     // Accessing the devices context
     const { devices } = useDevices();
-    console.log(devices); // Logging devices to the console for debugging purposes
 
     return (
         <div className={styles.DevicesGrid}>
             {/* Mapping each device to a DroppableDevice component */}
             {devices.map((device) => (
-                <DroppableDevice key={device.id} device={device} onDeviceClick={onDeviceClick} />
+                <DroppableDevice key={device.id} device={device}  />
             ))}
         </div>
     );
@@ -32,27 +27,23 @@ export const DeviceGrid: FunctionComponent<DevicesGridProps> = ({ orders, onDevi
 // DroppableDeviceProps interface defines the expected props for DroppableDevice component
 interface DroppableDeviceProps {
     device: Device; // Single device object
-    onDeviceClick: (order: Device) => void; // Function to handle click event on a device
 }
 
 // DroppableDevice component handles each individual device with drag-and-drop functionality
-const DroppableDevice: FunctionComponent<DroppableDeviceProps> = ({ device, onDeviceClick }) => {
-    // Disable droppable functionality if the device is occupied, otherwise initialize droppable
-    const { isOver, setNodeRef } = device.occupied
-        ? { isOver: false, setNodeRef: () => {} } // Disable droppable if device is occupied
-        : useDroppable({
-              id: device.id, // Unique identifier for the droppable area, based on device ID
-          });
+const DroppableDevice: FunctionComponent<DroppableDeviceProps> = ({ device}) => {
+    // Always call useDroppable, regardless of the `device.occupied` state
+    const { isOver, setNodeRef } = useDroppable({
+        id: device.id, // Unique identifier for the droppable area, based on device ID
+    });
 
-    // Accessing the function to refresh the devices (likely after a drop operation)
-    const { refreshDevices } = useDevices();
+    // Use conditional rendering for effects and behavior instead of skipping hooks
+    const nodeRef = device.occupied ? undefined : setNodeRef;
+    const isHovered = isOver && !device.occupied;
 
     return (
         <div
-            ref={setNodeRef} // Setting the droppable reference on the device element
-            className={`${styles.device} ${isOver && !device.occupied ? styles.hovered : ""}`} // Apply a hover effect if device is being dragged over (and is not occupied)
-            onClick={() => onDeviceClick(device)} // Handle click event on the device (passing the clicked device)
-            onDrop={refreshDevices} // Refresh devices when an item is dropped on the device
+            ref={nodeRef} // Only set the nodeRef if the device is not occupied
+            className={`${styles.device} ${isHovered ? styles.hovered : ""}`} // Apply a hover effect if the device is being dragged over and is not occupied
         >
             {/* Device status wrapper to indicate if the device is occupied or free */}
             <div

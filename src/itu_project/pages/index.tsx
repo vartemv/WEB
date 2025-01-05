@@ -18,7 +18,6 @@ import { useSensor,useSensors, MouseSensor } from "@dnd-kit/core";
 const DesktopContent: FunctionComponent = () => {
     // Destructure logic and state management from custom hook
     const {
-        orders,
         filteredOrders,
         isDetailsOpen,
         isCreateOrderOpen,
@@ -33,8 +32,8 @@ const DesktopContent: FunctionComponent = () => {
         openCreateOrder,
         closeCreateOrder,
         handleFilterClick,
-        openDeviceDetails,
         closeDeviceDetails,
+        refreshOrder
     } = useDesktopLogic();
 
     // Access device-related state and actions from the context
@@ -42,6 +41,7 @@ const DesktopContent: FunctionComponent = () => {
 
     // Refresh device list when the component mounts
     useEffect(() => {
+        refreshOrder();
         refreshDevices();
     }, []);
 
@@ -69,8 +69,6 @@ const DesktopContent: FunctionComponent = () => {
                 <AddOrderButton onClick={openCreateOrder} />
                 {/* Devices component displays devices and allows adding or selecting devices */}
                 <Devices 
-                    orders={orders} 
-                    onDeviceClick={openDeviceDetails} 
                     onDeviceAdd={refreshDevices} 
                 />
 

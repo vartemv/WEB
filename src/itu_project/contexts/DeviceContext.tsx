@@ -30,6 +30,7 @@ const getDevicesFromDB = async (): Promise<Device[]> => {
 // Provider component
 export const DevicesProvider = ({ children }: { children: ReactNode}) => {
   const [devices, setDevices] = useState<Device[]>([]);
+  const {handleOrderContext} = useDesktopLogic();
   const { changeStatus } = useDevice(); // Accessing changeStatus function
   const {changeOrderStatus} = useOrder();
 
@@ -49,6 +50,7 @@ export const DevicesProvider = ({ children }: { children: ReactNode}) => {
       await changeStatus(deviceId); // Call the changeStatus function
       await changeOrderStatus("Printing", orderId);
       await refreshDevices(); // Refresh the device list
+      await handleOrderContext();
     },
     [refreshDevices, changeStatus]
   );
@@ -73,7 +75,6 @@ export const DevicesProvider = ({ children }: { children: ReactNode}) => {
         refreshDevices,
         handleOrderAssignment,
         handleDragEnd,
-        
       }}
     >
       {children}

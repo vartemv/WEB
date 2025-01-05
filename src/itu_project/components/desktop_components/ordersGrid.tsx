@@ -1,10 +1,9 @@
 //Vereninov Artem, xveren00
 import { FunctionComponent } from "react"; // Importing React for functional component creation
-import { DndContext, useDraggable } from "@dnd-kit/core"; // Importing necessary hooks for drag-and-drop functionality
+import { DndContext, useDraggable, DragEndEvent } from "@dnd-kit/core"; // Importing necessary hooks for drag-and-drop functionality
 import styles from "../../styles/Desktop.module.css"; // Importing the styles for the component
 import { Order } from "types"; // Importing the Order type (replace with the actual type definition)
-import { useState } from "react"; // Importing React hooks for managing component state
-import { stat } from "fs"; // Not used, likely a leftover import
+
 
 // Defining the expected props for the OrdersGrid component
 interface OrdersGridProps {
@@ -89,6 +88,7 @@ const DraggableOrder: FunctionComponent<DraggableOrderProps> = ({ order, onOrder
 // OrdersGrid Component
 // This component renders a grid of draggable orders
 export const OrdersGrid: FunctionComponent<OrdersGridProps> = ({ orders, onOrderClick }) => (
+    
     <div className={styles.OrdersGrid}> {/* Main grid container */}
         {orders.map((order) => (
             <DraggableOrder

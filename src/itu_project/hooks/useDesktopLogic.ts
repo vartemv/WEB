@@ -2,7 +2,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { Order, Device } from "types"; // Replace with actual type definition
-import { useDevice } from "./useDevice";
 
 const get_from_db = async (api: string) => {
     const response = await fetch(api);
@@ -26,10 +25,6 @@ export const useDesktopLogic = () => {
         setOrders(order);
     };
 
-    useEffect(() => {
-        refreshOrder();
-    }, []);
-
     const filteredOrders = useMemo(() => {
         return orders.filter((order) => activeFilter === "all" || activeFilter === order.status);
     }, [orders, activeFilter]);
@@ -43,6 +38,10 @@ export const useDesktopLogic = () => {
         refreshOrder();
         setDetailsOpen(false);
     };
+
+    const handleOrderContext = async () => {
+        refreshOrder();
+    }
 
     const openDetails = useCallback((order: Order) => {
         setSelectedOrder(order);
@@ -99,6 +98,8 @@ export const useDesktopLogic = () => {
         navigateToAnalytics,
         openDeviceDetails,
         closeDeviceDetails,
-        refreshOrder
+        refreshOrder,
+        setOrders,
+        handleOrderContext
     };
 };

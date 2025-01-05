@@ -13,13 +13,11 @@ import * as VisuallyHidden from "@radix-ui/react-visually-hidden"; // Importing 
 
 // Interface for Devices component props
 interface DevicesGridProps {
-    orders: Order[]; // Orders to display in the device grid
-    onDeviceClick: (order: Device) => void; // Function to handle click events on a device
     onDeviceAdd: () => void; // Function to handle adding a new device
 }
 
 // Main functional component
-export const Devices: FunctionComponent<DevicesGridProps> = ({ orders, onDeviceClick, onDeviceAdd }) => {
+export const Devices: FunctionComponent<DevicesGridProps> = ({ onDeviceAdd }) => {
 
     // State hooks to manage visibility of sheets, file upload, and input fields
     const [deviceSheet, setDeviceSheet] = useState<boolean>(false); // Track if the devices sheet is open
@@ -100,7 +98,7 @@ export const Devices: FunctionComponent<DevicesGridProps> = ({ orders, onDeviceC
                     {/* Footer with a scrollable device grid */}
                     <SheetFooter>
                         <ScrollArea>
-                            <DeviceGrid orders={orders} onDeviceClick={onDeviceClick} /> {/* Render the device grid */}
+                            <DeviceGrid /> {/* Render the device grid */}
                             <ScrollBar orientation="horizontal" /> {/* Horizontal scrollbar */}
                         </ScrollArea>
                     </SheetFooter>
