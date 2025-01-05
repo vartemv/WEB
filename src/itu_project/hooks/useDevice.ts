@@ -1,3 +1,4 @@
+//Author Vereninov Artem, xveren00
 import { Device } from "@/types";
 import axios from "axios";
 

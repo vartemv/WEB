@@ -77,6 +77,11 @@
     max-width: 45px;
 }
 
+.homeIcon:hover {
+    transform: scale(1.1); /* Slightly increases the size of the icon on hover */
+    filter: brightness(1.2); /* Increases the brightness for a hover effect */
+}
+
 .spacer {
     flex-grow: 1; /* Takes up available space between .dashboardChild and .iconsGroup */
 }
