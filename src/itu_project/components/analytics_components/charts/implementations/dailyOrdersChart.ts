@@ -10,6 +10,10 @@ export const dailyOrdersChart: ChartConfig = {
       throw new Error('No orders available');
     }
 
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear().toString();
+    const currentMonth = currentDate.getMonth() + 1;
+
     const filteredOrders = orders.filter(order => {
       const [orderYear, orderMonth] = order.order_date.split('/');
       const monthNames = [
@@ -17,6 +21,10 @@ export const dailyOrdersChart: ChartConfig = {
         'July', 'August', 'September', 'October', 'November', 'December'
       ];
       const orderMonthName = monthNames[parseInt(orderMonth) - 1];
+      
+      if (month === 'Current') {
+        return orderYear === year && parseInt(orderMonth) === currentMonth;
+      }
       
       return year === orderYear && month === orderMonthName;
     });

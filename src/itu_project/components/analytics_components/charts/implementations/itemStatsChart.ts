@@ -24,7 +24,7 @@ export const itemStatsChart: ChartConfig = {
       const orderMonthName = monthNames[parseInt(orderMonth) - 1];
       
       if (month === 'Current') {
-        return orderYear === currentYear && parseInt(orderMonth) === currentMonth;
+        return orderYear === year  && parseInt(orderMonth) === currentMonth;
       }
       
       return year === orderYear && month === orderMonthName;
