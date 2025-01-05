@@ -56,9 +56,6 @@ const config: Config = {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
-		textColor: {
-			DEFAULT: 'black',  // Set the default text color to black globally
-		},
   	}
   },
   plugins: [require("tailwindcss-animate")],
