@@ -9,6 +9,8 @@ import { getTotalOrders, getTotalClients, getTotalRevenue } from '@/lib/orderUti
 import StatisticItem from '../components/analytics_components/StatisticsItem';
 import GraphManager from '@/components/analytics_components/GraphManager';
 import { useState } from 'react';
+import { Dashboard } from "@/components/desktop_components/dashboard";
+
 
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
@@ -29,17 +31,7 @@ const Analytics: FunctionComponent = () => {
 
   return (
     <main className={styles.analytics}>
-      <div className={styles.dashboard}>
-        <img className={styles.UserPicture} alt="" src="Ellipse_photo.svg" />
-        <div className="spacer" />
-        <div className={styles.iconsGroup}>
-          <img className={styles.homeIcon} alt="Home" src="Home.png" />
-          <img className={styles.homeIcon} alt="Cart" src="Cart.png" />
-          <img className={styles.homeIcon} alt="Graph" src="Graph.png" />
-          <img className={styles.homeIcon} alt="Parcel" src="Parcel.png" />
-          <img className={styles.homeIcon} alt="Gears" src="Gears.png" />
-        </div>
-      </div>
+    <Dashboard />    
       <div className={styles.container}>
         <div className={styles.contentWrapper}>
           <div className={styles.column}>
