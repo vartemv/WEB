@@ -5,7 +5,9 @@ import { FormDataProvider } from '../contexts/FormDataContext';
 export default function App({ Component, pageProps }: AppProps) {
     return (
     <FormDataProvider>
-      <Component {...pageProps} />
+      <div className="text-black">
+        <Component {...pageProps} />
+      </div>
     </FormDataProvider>
   );
 }
