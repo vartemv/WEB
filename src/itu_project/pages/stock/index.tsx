@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Link from 'next/link';
 import styles from '../../styles/StockManagement.module.css';
 import CategoryGrid from "../../components/CategoryGrid";
+import { Dashboard } from "@/components/desktop_components/dashboard";
 
 const StockManagement: React.FC = () => {
 
@@ -21,6 +22,7 @@ const StockManagement: React.FC = () => {
   }, []);
 
   return (<>
+  <Dashboard />
     <main className={styles.stockManagement}>
       <div className={styles.contentContainer}>
         <h1 className={styles.pageTitle}>Stock: Your Categories</h1>

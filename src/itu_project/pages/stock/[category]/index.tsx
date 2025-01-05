@@ -8,6 +8,7 @@ import StockTableMod from '../../../components/StockTableMod';
 import ProductFormModal from '../../../components/ProductAddForm';
 import ProductEditFormModal from '../../../components/ProductEditForm';
 import { useFormData } from "../../../contexts/FormDataContext";
+import { Dashboard } from "@/components/desktop_components/dashboard";
 
 interface Item {
     id: number;
@@ -142,8 +143,10 @@ const StockManagement: React.FC = () => {
     };
 
   return (<>
-    <main className={`bg-gray-100 flex flex-col overflow-hidden transition-all duration-300 ${
-    isSheetOpen || isEditSheetOpen ? 'mr-80' : 'mr-0' }`}>
+  <Dashboard />
+  <main
+      className={`bg-gray-100 flex flex-col overflow-hidden transition-all duration-300 ${
+        isSheetOpen || isEditSheetOpen ? 'mr-80' : 'mr-0'}`} style={{ marginLeft: '3vw' }} >
       <div className="bg-white flex flex-col w-full justify-start p-3 pb-[386px]">
         <h1 className={styles.pageTitle}>Stock: {category}</h1>
         <div className="border-t border-gray-300 my-2"></div>
