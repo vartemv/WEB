@@ -43,7 +43,7 @@ const ProductEditFormModal: React.FC<ProductEditFormModalProps> = ({
     <Sheet open={isSheetOpen} onOpenChange={(open) => {
         if (open !== false) setIsSheetOpen(open);
       }} modal={false}>
-      <SheetContent className="w-80 translate-x-0 transition-transform duration-300">
+      <SheetContent className="w-80 translate-x-0 transition-transform duration-300 bg-white">
         <SheetHeader>
           <SheetTitle>Edit Product</SheetTitle>
           <SheetDescription>Edit the details of your selected product.</SheetDescription>

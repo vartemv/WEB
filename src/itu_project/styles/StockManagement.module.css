@@ -12,7 +12,8 @@
     width: 100%;
     flex-direction: column;
     justify-content: start;
-    padding: 10px 10px 386px;
+    padding: 10px 10px 10px;
+    min-height: 100vh;
   }
   
   .pageTitle {
